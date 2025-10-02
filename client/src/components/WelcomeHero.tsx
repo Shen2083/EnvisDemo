@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@assets/generated_images/Family_using_devices_together_44247ef2.png";
+import heroImage from "@assets/stock_images/modern_happy_family__e3101d58.jpg";
 
 interface WelcomeHeroProps {
   onSignUp: () => void;
