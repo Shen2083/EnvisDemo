@@ -45,9 +45,9 @@ export default function Insights() {
   return (
     <div className="min-h-screen p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-heading font-bold mb-2">AI Insights</h1>
+        <h1 className="text-3xl font-heading font-bold mb-2">Smart Insights</h1>
         <p className="text-muted-foreground">
-          Intelligent recommendations to optimize your family finances
+          Proactive recommendations to prevent stress and build wealth
         </p>
       </div>
 

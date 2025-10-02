@@ -52,10 +52,10 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
         <Card className="w-full max-w-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-heading mb-2">
-              Let's get a complete picture of your finances
+              Connect all your family accounts
             </CardTitle>
             <CardDescription className="text-base">
-              Envis uses secure, FCA-regulated Open Banking to connect to your accounts in read-only mode. 
+              Using secure Open Banking technology, link your accounts in seconds with bank-level security. 
               We never see your bank login details.
             </CardDescription>
           </CardHeader>

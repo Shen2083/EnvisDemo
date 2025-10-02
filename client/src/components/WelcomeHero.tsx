@@ -21,11 +21,11 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
           Envis
         </h1>
         <p className="text-2xl md:text-3xl font-medium mb-4">
-          The AI-powered financial partner for your family
+          Your Family's Financial Partner, Finally.
         </p>
         <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Connect all your family accounts, track spending together, set shared goals, 
-          and receive intelligent insights to optimize your finances.
+          The intelligent financial coach that proactively coordinates your goals, 
+          prevents financial stress, and builds collective wealth.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -52,7 +52,7 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
           </svg>
-          <span>FCA regulated • Bank-grade encryption • Read-only access</span>
+          <span>FCA-aligned principles • Bank-level security • Your data stays private</span>
         </div>
       </div>
     </div>

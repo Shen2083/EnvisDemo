@@ -26,7 +26,7 @@ export default function Dashboard() {
       <div>
         <h1 className="text-3xl font-heading font-bold mb-2">Family Dashboard</h1>
         <p className="text-muted-foreground">
-          Your complete financial overview across all connected accounts
+          One family, one complete financial picture
         </p>
       </div>
 
