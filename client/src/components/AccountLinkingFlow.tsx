@@ -27,7 +27,9 @@ const DEMO_ACCOUNTS = [
 export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
   const [step, setStep] = useState<"intro" | "selectBank" | "selectAccounts" | "success">("intro");
   const [selectedBank, setSelectedBank] = useState<string | null>(null);
-  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
+  const [currentBankAccounts, setCurrentBankAccounts] = useState<string[]>([]);
+  const [allConnectedAccounts, setAllConnectedAccounts] = useState<string[]>([]);
+  const [connectedBanks, setConnectedBanks] = useState<string[]>([]);
 
   const handleBankSelect = (bankId: string) => {
     setSelectedBank(bankId);
@@ -35,7 +37,7 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
   };
 
   const handleAccountToggle = (accountId: string) => {
-    setSelectedAccounts((prev) =>
+    setCurrentBankAccounts((prev) =>
       prev.includes(accountId)
         ? prev.filter((id) => id !== accountId)
         : [...prev, accountId]
@@ -43,7 +45,19 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
   };
 
   const handleConfirm = () => {
+    // Add current bank's accounts to all connected accounts
+    setAllConnectedAccounts((prev) => [...prev, ...currentBankAccounts]);
+    if (selectedBank) {
+      setConnectedBanks((prev) => [...prev, selectedBank]);
+    }
     setStep("success");
+  };
+
+  const handleAddAnotherBank = () => {
+    // Reset current bank selection but keep all connected accounts
+    setSelectedBank(null);
+    setCurrentBankAccounts([]);
+    setStep("selectBank");
   };
 
   if (step === "intro") {
@@ -132,7 +146,7 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
               >
                 <Checkbox
                   id={account.id}
-                  checked={selectedAccounts.includes(account.id)}
+                  checked={currentBankAccounts.includes(account.id)}
                   onCheckedChange={() => handleAccountToggle(account.id)}
                   data-testid={`checkbox-account-${account.id}`}
                 />
@@ -155,10 +169,10 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
               size="lg"
               className="w-full mt-6"
               onClick={handleConfirm}
-              disabled={selectedAccounts.length === 0}
+              disabled={currentBankAccounts.length === 0}
               data-testid="button-confirm-accounts"
             >
-              Connect {selectedAccounts.length} {selectedAccounts.length === 1 ? "Account" : "Accounts"}
+              Connect {currentBankAccounts.length} {currentBankAccounts.length === 1 ? "Account" : "Accounts"}
             </Button>
           </CardContent>
         </Card>
@@ -176,14 +190,14 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
             </div>
           </div>
           <CardTitle className="text-3xl font-heading mb-2">
-            You're all connected!
+            {connectedBanks.length === 1 ? "Great start!" : "You're all connected!"}
           </CardTitle>
           <CardDescription className="text-base">
-            Successfully connected {selectedAccounts.length} {selectedAccounts.length === 1 ? "account" : "accounts"}
+            Successfully connected {allConnectedAccounts.length} {allConnectedAccounts.length === 1 ? "account" : "accounts"} from {connectedBanks.length} {connectedBanks.length === 1 ? "bank" : "banks"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {DEMO_ACCOUNTS.filter((acc) => selectedAccounts.includes(acc.id)).map((account) => (
+          {DEMO_ACCOUNTS.filter((acc) => allConnectedAccounts.includes(acc.id)).map((account) => (
             <div key={account.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
               <div>
                 <div className="font-medium">{account.name}</div>
@@ -195,14 +209,26 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
             </div>
           ))}
 
-          <Button
-            size="lg"
-            className="w-full mt-6"
-            onClick={() => onComplete(selectedAccounts)}
-            data-testid="button-view-dashboard"
-          >
-            See My Family Dashboard
-          </Button>
+          <div className="flex flex-col gap-3 pt-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full"
+              onClick={handleAddAnotherBank}
+              data-testid="button-add-another-bank"
+            >
+              <Building2 className="h-4 w-4 mr-2" />
+              Add Another Bank
+            </Button>
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={() => onComplete(allConnectedAccounts)}
+              data-testid="button-view-dashboard"
+            >
+              See My Family Dashboard
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
