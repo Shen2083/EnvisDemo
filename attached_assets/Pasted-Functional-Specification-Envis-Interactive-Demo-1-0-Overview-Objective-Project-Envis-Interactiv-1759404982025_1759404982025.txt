@@ -1,0 +1,164 @@
+Functional Specification: Envis Interactive Demo
+1.0 Overview & Objective
+
+Project: Envis Interactive Demo Application
+
+Purpose: To create a high-fidelity, interactive prototype that demonstrates the core innovative features of Envis. This demo will be the primary tool for showcasing the product to the endorsing body, potential investors, and early beta users.
+
+Primary Goal: To provide a tangible, hands-on experience of the product's value proposition, moving beyond static mockups and proving the concept's technical feasibility and user benefit.   
+
+2.0 Core Philosophy & Demo Strategy
+
+To manage development time and cost, the demo will employ a "Wizard of Oz" methodology. The front-end user experience will be fully functional, polished, and interactive. The back-end, however, will not be a live production system. Instead, it will use a combination of a real Open Banking sandbox environment and pre-defined, static data to simulate the AI's intelligence.
+
+This strategy allows us to demonstrate the full power of the Envis concept without the significant overhead of building a production-ready AI engine for the demo phase. The focus is on proving the    
+
+what (the user experience and value) before scaling the how (the live AI infrastructure).
+
+3.0 Key User Journeys & Features
+
+The demo will guide the user through four critical journeys that showcase the core functionality of Envis.
+
+3.1 Journey 1: Onboarding & Secure Account Linking
+This journey demonstrates the seamless and secure process of connecting bank accounts, a foundational step for the app's functionality.
+
+Screen 1: Welcome & Sign Up
+
+UI Elements: Clean welcome screen with the Envis logo, a brief value proposition ("The AI-powered financial partner for your family"), and two buttons: Sign Up and Log In.
+
+Functionality: The Sign Up button leads to a standard account creation form (Name, Email, Password). Upon submission, the user is logged in and taken to the Account Linking screen.
+
+Screen 2: Connect Your Accounts
+
+UI Elements: A screen explaining the next step. Headline: "Let's get a complete picture of your finances." Body text: "Envis uses secure, FCA-regulated Open Banking to connect to your accounts in read-only mode. We never see your bank login details."
+
+CTA Button: Connect My First Account
+
+Functionality: Clicking the button will initiate the Open Banking connection flow.
+
+Screen 3: Open Banking Connection (Simulation)
+
+Functionality: This will launch a connection to a trusted Open Banking API provider's sandbox environment (e.g., Plaid Sandbox or TrueLayer's equivalent). This is a critical step to demonstrate technical credibility without requiring full FCA registration for the demo.
+
+The user will be presented with a list of UK banks (e.g., Monzo, Starling, Barclays, NatWest).
+
+Upon selecting a bank, they will see a standard consent screen explaining the data that will be shared (account details, transaction history).
+
+The user will "log in" using the sandbox credentials provided by the API service (e.g., user_good/pass_good).
+
+The user will select which accounts to share (e.g., "Joint Account," "Personal Account," "Credit Card").
+
+Upon successful connection, the user is redirected back to the Envis app.
+
+Screen 4: Connection Success
+
+UI Elements: A success screen showing the connected accounts with their balances. Headline: "You're all connected!"
+
+CTA Button: See My Family Dashboard
+
+3.2 Journey 2: The Unified Transaction View
+This journey showcases the core value of seeing all family transactions in a single, unified feed.
+
+Screen 1: The Family Dashboard
+
+UI Elements:
+
+Top Summary: A high-level view showing "Total Family Balance" (sum of all connected accounts) and "Monthly Net Cash Flow."
+
+Unified Transaction Feed: A scrollable list of all transactions from all connected accounts, sorted by date (most recent first).
+
+Functionality:
+
+Each transaction item in the feed must clearly display:
+
+Merchant Name (e.g., "Tesco," "Amazon.co.uk")
+
+Transaction Amount
+
+Date
+
+Source Account Label: A small tag indicating which account the transaction came from (e.g., "Joint Account," "Shen's Amex," "Partner's Current Account"). This is crucial for demonstrating the holistic view.
+
+A search bar at the top allows users to filter transactions by name or category.
+
+3.3 Journey 3: Setting and Tracking a Family Goal
+This journey demonstrates the collaborative goal-setting feature, a key differentiator.
+
+Screen 1: Goals Hub
+
+UI Elements: A dashboard showing all active family goals as cards. Each card displays the Goal Name, a progress bar, and the percentage complete.
+
+CTA Button: + Add a New Goal
+
+Screen 2: Create a New Goal
+
+UI Elements: A simple form with the following fields:
+
+Goal Name (e.g., "House Deposit")
+
+Target Amount (e.g., £20,000)
+
+Target Date (e.g., October 2028)
+
+Link Accounts to this Goal: A multi-select checklist of all connected accounts (e.g., "Joint Savings," "Shen's ISA").
+
+Functionality:
+
+Upon entering the amount and date, the app will automatically calculate and display the "Required Monthly Contribution" (e.g., "You'll need to save £417 per month to reach this goal"). This demonstrates the app's intelligence.
+
+When the user saves the goal, they are returned to the Goals Hub, where the new goal now appears.
+
+3.4 Journey 4: Receiving AI-Powered Insights
+This journey is the most critical for demonstrating the "Innovation" criterion. It will simulate the proactive, intelligent coaching that makes Envis unique.
+
+Screen 1: The Insights Feed
+
+UI Elements: A dedicated tab or screen labelled "Insights," presented as a feed of notification-style cards.
+
+Functionality: For the demo, these insights will be rules-based and triggered by the pre-defined demo data set. They are not generated by a live ML model but are designed to show what the final product will do.
+
+Example Insight Cards:
+
+Subscription Review:
+
+Headline: "Subscription Check-in"
+
+Body: "We noticed you have 3 similar streaming subscriptions (Netflix, Disney+, Prime Video) costing £35/month. Could you consolidate?"
+
+Unusual Spending Alert:
+
+Headline: "Unusual Spending Detected"
+
+Body: "Your family's 'Eating Out' spending is £150 higher than your £200 monthly average. Are you aware of this?"
+
+Goal Contribution Nudge (Positive Reinforcement):
+
+Headline: "Great Progress on Your House Deposit!"
+
+Body: "You've saved £500 towards your goal this month, putting you £83 ahead of schedule. Keep it up!"
+
+Proactive Cash Flow Warning (Core Innovation):
+
+Headline: "Heads Up: Low Balance Alert"
+
+Body: "Your £1,500 mortgage payment is due from your Joint Account in 3 days, but the current balance is only £800. We recommend moving £700 from your 'Personal Savings' to avoid issues."
+
+4.0 Data Requirements (For Demo Purposes)
+
+To power the demo, the application will ingest a static JSON file that simulates the data returned from an Open Banking API for a sample family. This approach ensures a consistent and compelling demo experience.
+
+accounts.json: An array of account objects.
+
+Example Object: { "accountId": "acc_01", "accountName": "Joint Account", "accountType": "checking", "balance": 800.50, "currency": "GBP" }
+
+transactions.json: An array of transaction objects linked to the accounts.
+
+Example Object: { "transactionId": "txn_123", "accountId": "acc_01", "merchantName": "Tesco", "amount": -55.40, "date": "2025-09-28", "category": "Groceries" }
+
+This data will be pre-populated with transactions specifically designed to trigger the insights in Journey 4.
+
+5.0 Technology Stack (Recommendation)
+
+Frontend/Backend: A no-code/low-code platform like FlutterFlow or Bubble.io is ideal for rapidly building this high-fidelity prototype.
+
+Open Banking Simulation: Plaid Sandbox API or TrueLayer Data API (in sandbox mode). These are industry-standard tools for development and will demonstrate a professional, secure approach to the assessor.
