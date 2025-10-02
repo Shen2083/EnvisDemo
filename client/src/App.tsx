@@ -11,7 +11,8 @@ import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
 import Goals from "@/pages/Goals";
 import Insights from "@/pages/Insights";
-import { LayoutDashboard, Target, Lightbulb } from "lucide-react";
+import Accounts from "@/pages/Accounts";
+import { LayoutDashboard, Target, Lightbulb, Building2 } from "lucide-react";
 
 function Navigation() {
   const [location] = useLocation();
@@ -20,6 +21,7 @@ function Navigation() {
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { path: "/goals", label: "Goals", icon: Target },
     { path: "/insights", label: "Insights", icon: Lightbulb },
+    { path: "/accounts", label: "Accounts", icon: Building2 },
   ];
 
   return (
@@ -72,6 +74,7 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/goals" component={Goals} />
         <Route path="/insights" component={Insights} />
+        <Route path="/accounts" component={Accounts} />
         <Route component={NotFound} />
       </Switch>
     </>
