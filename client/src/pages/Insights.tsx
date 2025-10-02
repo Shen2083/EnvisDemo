@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { InsightCard } from "@/components/InsightCard";
+import { InsightDetail } from "@/components/InsightDetail";
 
 interface Insight {
   id: string;
@@ -9,6 +10,7 @@ interface Insight {
 }
 
 export default function Insights() {
+  const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   // TODO: remove mock data - replace with AI-generated insights
   const [insights, setInsights] = useState<Insight[]>([
     {
@@ -39,8 +41,30 @@ export default function Insights() {
 
   const handleDismiss = (id: string) => {
     setInsights(insights.filter((insight) => insight.id !== id));
+    setSelectedInsight(null);
     console.log("Dismissed insight:", id);
   };
+
+  const handleReview = (insight: Insight) => {
+    setSelectedInsight(insight);
+    console.log("Reviewing insight:", insight.id);
+  };
+
+  const handleTakeAction = () => {
+    console.log("Taking action on insight:", selectedInsight?.id);
+    // In a real app, this would trigger specific actions based on insight type
+  };
+
+  if (selectedInsight) {
+    return (
+      <InsightDetail
+        {...selectedInsight}
+        onBack={() => setSelectedInsight(null)}
+        onTakeAction={handleTakeAction}
+        onDismiss={() => handleDismiss(selectedInsight.id)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen p-6 space-y-6">
@@ -60,11 +84,15 @@ export default function Insights() {
       ) : (
         <div className="max-w-3xl space-y-6">
           {insights.map((insight) => (
-            <InsightCard
-              key={insight.id}
-              {...insight}
-              onDismiss={() => handleDismiss(insight.id)}
-            />
+            <div key={insight.id} onClick={() => handleReview(insight)} className="cursor-pointer">
+              <InsightCard
+                {...insight}
+                onDismiss={(e) => {
+                  e?.stopPropagation();
+                  handleDismiss(insight.id);
+                }}
+              />
+            </div>
           ))}
         </div>
       )}

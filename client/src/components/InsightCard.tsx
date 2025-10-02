@@ -6,7 +6,7 @@ interface InsightCardProps {
   type: "subscription" | "spending" | "goal" | "cashflow";
   headline: string;
   body: string;
-  onDismiss?: () => void;
+  onDismiss?: (e?: React.MouseEvent) => void;
 }
 
 const INSIGHT_CONFIG = {
@@ -60,7 +60,10 @@ export function InsightCard({ type, headline, body, onDismiss }: InsightCardProp
             <Button
               variant="outline"
               size="sm"
-              onClick={onDismiss}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDismiss(e);
+              }}
               data-testid="button-insight-dismiss"
             >
               Dismiss

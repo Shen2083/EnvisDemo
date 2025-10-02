@@ -15,13 +15,19 @@ interface GoalFormProps {
   }) => void;
   onCancel: () => void;
   availableAccounts: { id: string; name: string }[];
+  initialData?: {
+    name: string;
+    targetAmount: string;
+    targetDate: string;
+    linkedAccounts: string[];
+  };
 }
 
-export function GoalForm({ onSubmit, onCancel, availableAccounts }: GoalFormProps) {
-  const [name, setName] = useState("");
-  const [targetAmount, setTargetAmount] = useState("");
-  const [targetDate, setTargetDate] = useState("");
-  const [linkedAccounts, setLinkedAccounts] = useState<string[]>([]);
+export function GoalForm({ onSubmit, onCancel, availableAccounts, initialData }: GoalFormProps) {
+  const [name, setName] = useState(initialData?.name || "");
+  const [targetAmount, setTargetAmount] = useState(initialData?.targetAmount || "");
+  const [targetDate, setTargetDate] = useState(initialData?.targetDate || "");
+  const [linkedAccounts, setLinkedAccounts] = useState<string[]>(initialData?.linkedAccounts || []);
   const [monthlyContribution, setMonthlyContribution] = useState<number | null>(null);
 
   useEffect(() => {
@@ -61,9 +67,11 @@ export function GoalForm({ onSubmit, onCancel, availableAccounts }: GoalFormProp
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="w-full max-w-2xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-heading">Create a New Goal</CardTitle>
+          <CardTitle className="text-2xl font-heading">
+            {initialData ? "Edit Goal" : "Create a New Goal"}
+          </CardTitle>
           <CardDescription>
-            Set a savings goal for your family to work towards together
+            {initialData ? "Update your family savings goal" : "Set a savings goal for your family to work towards together"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -159,7 +167,7 @@ export function GoalForm({ onSubmit, onCancel, availableAccounts }: GoalFormProp
                 Cancel
               </Button>
               <Button type="submit" className="flex-1" data-testid="button-save-goal">
-                Create Goal
+                {initialData ? "Update Goal" : "Create Goal"}
               </Button>
             </div>
           </form>
