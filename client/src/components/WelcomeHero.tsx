@@ -1,0 +1,60 @@
+import { Button } from "@/components/ui/button";
+import heroImage from "@assets/generated_images/Family_using_devices_together_44247ef2.png";
+
+interface WelcomeHeroProps {
+  onSignUp: () => void;
+  onLogin: () => void;
+}
+
+export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
+  return (
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImage})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90" />
+      </div>
+      
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
+        <h1 className="font-heading font-bold text-5xl md:text-6xl tracking-tight mb-6">
+          Envis
+        </h1>
+        <p className="text-2xl md:text-3xl font-medium mb-4">
+          The AI-powered financial partner for your family
+        </p>
+        <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
+          Connect all your family accounts, track spending together, set shared goals, 
+          and receive intelligent insights to optimize your finances.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button
+            size="lg"
+            className="text-lg px-8"
+            onClick={onSignUp}
+            data-testid="button-signup"
+          >
+            Get Started
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="text-lg px-8 bg-background/60 backdrop-blur-sm"
+            onClick={onLogin}
+            data-testid="button-login"
+          >
+            Log In
+          </Button>
+        </div>
+
+        <div className="mt-16 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+          </svg>
+          <span>FCA regulated • Bank-grade encryption • Read-only access</span>
+        </div>
+      </div>
+    </div>
+  );
+}
