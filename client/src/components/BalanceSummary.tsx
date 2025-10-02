@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Target, AlertCircle } from "lucide-react";
+import { Link } from "wouter";
 
 interface BalanceSummaryProps {
   totalBalance: number;
@@ -38,29 +39,33 @@ export function BalanceSummary({ totalBalance, monthlyNetFlow, activeGoals, pend
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Active Goals</span>
-            <Target className="h-4 w-4 text-chart-2" />
-          </div>
-          <div className="text-3xl font-bold tabular-nums">
-            {activeGoals}
-          </div>
-        </CardContent>
-      </Card>
+      <Link href="/goals">
+        <Card className="cursor-pointer hover-elevate active-elevate-2" data-testid="card-goals">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Active Goals</span>
+              <Target className="h-4 w-4 text-chart-2" />
+            </div>
+            <div className="text-3xl font-bold tabular-nums">
+              {activeGoals}
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
 
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Insights</span>
-            <AlertCircle className="h-4 w-4 text-chart-4" />
-          </div>
-          <div className="text-3xl font-bold tabular-nums">
-            {pendingAlerts}
-          </div>
-        </CardContent>
-      </Card>
+      <Link href="/insights">
+        <Card className="cursor-pointer hover-elevate active-elevate-2" data-testid="card-insights">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">Insights</span>
+              <AlertCircle className="h-4 w-4 text-chart-4" />
+            </div>
+            <div className="text-3xl font-bold tabular-nums">
+              {pendingAlerts}
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 }
