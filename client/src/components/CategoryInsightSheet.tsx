@@ -115,13 +115,10 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
         monthlySavings = parseFloat(singleMatch[1].replace(/,/g, ''));
       }
     }
-  } else {
-    const monthsInPeriod = getMonthsFromTransactions(category.transactions);
-    monthlySavings = category.totals.spendToDate / monthsInPeriod;
-  }
-  
-  if (monthlySavings > 0) {
-    savingsPotential = calculateSavingsPotential(monthlySavings);
+    
+    if (monthlySavings > 0) {
+      savingsPotential = calculateSavingsPotential(monthlySavings);
+    }
   }
 
   return (
