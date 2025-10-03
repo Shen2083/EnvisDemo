@@ -184,7 +184,7 @@ export default function Dashboard() {
   const [categories, setCategories] = useState<TransactionCategory[]>(mockCategories);
   const [selectedTransactionIds, setSelectedTransactionIds] = useState<string[]>([]);
   const [activeInsightCategoryId, setActiveInsightCategoryId] = useState<string | null>(null);
-  const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>("current-month");
+  const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>("current-and-previous");
 
   const parseTransactionDate = (dateStr: string): Date => {
     const months: { [key: string]: number } = {

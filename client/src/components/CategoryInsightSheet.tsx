@@ -18,9 +18,19 @@ interface CategoryInsight {
   }[];
 }
 
+interface Transaction {
+  id: string;
+  merchantName: string;
+  amount: number;
+  date: string;
+  accountLabel: string;
+  category: string;
+}
+
 interface TransactionCategory {
   id: string;
   name: string;
+  transactions: Transaction[];
   totals: {
     spendToDate: number;
     monthOverMonth: number;
@@ -39,6 +49,34 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
 
   const formatAmount = (amount: number) => {
     return `£${Math.abs(amount).toFixed(2)}`;
+  };
+
+  const parseTransactionDate = (dateStr: string): Date => {
+    const months: { [key: string]: number } = {
+      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+    };
+    
+    const parts = dateStr.split(' ');
+    const day = parseInt(parts[0]);
+    const month = months[parts[1]];
+    const year = parseInt(parts[2]);
+    
+    return new Date(year, month, day);
+  };
+
+  const getMonthsFromTransactions = (transactions: Transaction[]): number => {
+    if (transactions.length === 0) return 1;
+    
+    const dates = transactions.map(tx => parseTransactionDate(tx.date));
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+    
+    const yearDiff = maxDate.getFullYear() - minDate.getFullYear();
+    const monthDiff = maxDate.getMonth() - minDate.getMonth();
+    const totalMonths = (yearDiff * 12) + monthDiff + 1;
+    
+    return Math.max(1, totalMonths);
   };
 
   const calculateSavingsPotential = (monthlySavings: number) => {
@@ -61,6 +99,8 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
   );
 
   let savingsPotential = null;
+  let monthlySavings = 0;
+  
   if (potentialSavingsMetric) {
     const value = potentialSavingsMetric.value;
     const rangeMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)\s*-\s*£?([\d,]+(?:\.\d{1,2})?)/);
@@ -68,15 +108,20 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
     if (rangeMatch) {
       const min = parseFloat(rangeMatch[1].replace(/,/g, ''));
       const max = parseFloat(rangeMatch[2].replace(/,/g, ''));
-      const monthlySavings = (min + max) / 2;
-      savingsPotential = calculateSavingsPotential(monthlySavings);
+      monthlySavings = (min + max) / 2;
     } else {
       const singleMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)/);
       if (singleMatch) {
-        const monthlySavings = parseFloat(singleMatch[1].replace(/,/g, ''));
-        savingsPotential = calculateSavingsPotential(monthlySavings);
+        monthlySavings = parseFloat(singleMatch[1].replace(/,/g, ''));
       }
     }
+  } else {
+    const monthsInPeriod = getMonthsFromTransactions(category.transactions);
+    monthlySavings = category.totals.spendToDate / monthsInPeriod;
+  }
+  
+  if (monthlySavings > 0) {
+    savingsPotential = calculateSavingsPotential(monthlySavings);
   }
 
   return (
@@ -156,22 +201,28 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
 
                 {savingsPotential && (
                   <div className="pt-4 border-t space-y-3">
-                    <h5 className="text-sm font-medium">Yearly Savings Potential</h5>
+                    <h5 className="text-sm font-medium">Yearly Growth Potential</h5>
                     <p className="text-xs text-muted-foreground">
-                      If you saved this amount for a year, here's what it could grow to:
+                      {potentialSavingsMetric 
+                        ? "If you saved this amount for a year, here's what it could grow to:"
+                        : "Based on your monthly average, here's what this amount could grow to if invested for a year:"}
                     </p>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Saved (12 months)</span>
+                        <span className="text-sm text-muted-foreground">Monthly Average</span>
+                        <span className="text-sm font-medium">{formatAmount(monthlySavings)}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Yearly Total (12 months)</span>
                         <span className="text-sm font-medium">{savingsPotential.yearlyPrincipal}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">In Index Fund (8% return)</span>
-                        <span className="text-sm font-semibold text-green-600">{savingsPotential.indexFund}</span>
+                        <span className="text-sm font-semibold text-green-600 dark:text-green-500">{savingsPotential.indexFund}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">In Savings Account (4.5% interest)</span>
-                        <span className="text-sm font-semibold text-green-600">{savingsPotential.savingsAccount}</span>
+                        <span className="text-sm font-semibold text-green-600 dark:text-green-500">{savingsPotential.savingsAccount}</span>
                       </div>
                     </div>
                   </div>
