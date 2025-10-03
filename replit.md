@@ -67,6 +67,7 @@ Preferred communication style: Simple, everyday language.
 - Create custom categories with dialog form (automatically handles duplicate names)
 - Category-level insights accessible via side panel (Sheet component)
 - Real-time category totals with month-over-month comparisons
+- Timeline filter: View transactions by current month, previous month, current + previous, last 3/6 months, year to date, or last 2 years
 - Search functionality across all transactions
 - Amount formatting with proper signs: Income positive (+£2500) in green, spending negative (-£165.40)
 - Grid-based layout ensures consistent alignment of View Insights buttons and amounts
