@@ -233,6 +233,32 @@ export default function Dashboard() {
     setSelectedTransactionIds([]);
   };
 
+  const handleAddCategory = (categoryName: string) => {
+    setCategories((prevCategories) => {
+      let baseId = categoryName.toLowerCase().replace(/\s+/g, "-");
+      let categoryId = baseId;
+      let counter = 1;
+
+      while (prevCategories.some((cat) => cat.id === categoryId)) {
+        categoryId = `${baseId}-${counter}`;
+        counter++;
+      }
+
+      const newCategory: TransactionCategory = {
+        id: categoryId,
+        name: categoryName,
+        transactions: [],
+        totals: {
+          spendToDate: 0,
+          monthOverMonth: 0,
+          transactionCount: 0,
+        },
+      };
+
+      return [...prevCategories, newCategory];
+    });
+  };
+
   const activeCategory = categories.find((c) => c.id === activeInsightCategoryId);
 
   return (
@@ -257,6 +283,7 @@ export default function Dashboard() {
         onSelectionChange={setSelectedTransactionIds}
         onMoveTransactions={handleMoveTransactions}
         onViewInsights={setActiveInsightCategoryId}
+        onAddCategory={handleAddCategory}
         activeCategory={activeCategory}
         onCloseInsights={() => setActiveInsightCategoryId(null)}
       />

@@ -24,7 +24,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight, Plus } from "lucide-react";
 import { CategoryInsightSheet } from "@/components/CategoryInsightSheet";
 
 interface Transaction {
@@ -63,6 +72,7 @@ interface TransactionGroupsProps {
   onSelectionChange: (ids: string[]) => void;
   onMoveTransactions: (transactionIds: string[], targetCategoryId: string) => void;
   onViewInsights: (categoryId: string) => void;
+  onAddCategory: (categoryName: string) => void;
   activeCategory?: TransactionCategory;
   onCloseInsights: () => void;
 }
@@ -73,11 +83,14 @@ export function TransactionGroups({
   onSelectionChange,
   onMoveTransactions,
   onViewInsights,
+  onAddCategory,
   activeCategory,
   onCloseInsights,
 }: TransactionGroupsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [moveToCategory, setMoveToCategory] = useState<string>("");
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   const filteredCategories = categories
     .map((category) => ({
@@ -117,6 +130,14 @@ export function TransactionGroups({
     }
   };
 
+  const handleAddCategory = () => {
+    if (newCategoryName.trim()) {
+      onAddCategory(newCategoryName.trim());
+      setNewCategoryName("");
+      setIsAddCategoryOpen(false);
+    }
+  };
+
   const formatAmount = (amount: number) => {
     if (amount < 0) {
       return `-£${Math.abs(amount).toFixed(2)}`;
@@ -130,7 +151,57 @@ export function TransactionGroups({
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="font-heading">Transaction Groups</CardTitle>
+          <div className="flex items-center justify-between gap-4">
+            <CardTitle className="font-heading">Transaction Groups</CardTitle>
+            <Dialog open={isAddCategoryOpen} onOpenChange={setIsAddCategoryOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline" data-testid="button-add-category">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Category
+                </Button>
+              </DialogTrigger>
+              <DialogContent data-testid="dialog-add-category">
+                <DialogHeader>
+                  <DialogTitle>Add New Category</DialogTitle>
+                  <DialogDescription>
+                    Create a new category to organize your transactions.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                  <Input
+                    placeholder="Category name (e.g., Healthcare, Pets, etc.)"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddCategory();
+                      }
+                    }}
+                    data-testid="input-category-name"
+                  />
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsAddCategoryOpen(false);
+                      setNewCategoryName("");
+                    }}
+                    data-testid="button-cancel-category"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleAddCategory}
+                    disabled={!newCategoryName.trim()}
+                    data-testid="button-save-category"
+                  >
+                    Add Category
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -195,7 +266,7 @@ export function TransactionGroups({
               return (
                 <AccordionItem key={category.id} value={category.id}>
                   <AccordionTrigger className="hover:no-underline" data-testid={`accordion-category-${category.id}`}>
-                    <div className="flex items-center justify-between w-full pr-4">
+                    <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 w-full pr-4">
                       <div className="flex items-center gap-3">
                         <span className="font-medium">{category.name}</span>
                         <span className="text-sm text-muted-foreground">
@@ -203,8 +274,8 @@ export function TransactionGroups({
                           {category.totals.transactionCount !== 1 ? "s" : ""}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4">
-                        {category.insight && (
+                      <div className="min-w-[140px]">
+                        {category.insight ? (
                           <Button
                             size="sm"
                             variant="ghost"
@@ -218,33 +289,35 @@ export function TransactionGroups({
                             <Lightbulb className="h-4 w-4" />
                             View Insights
                           </Button>
+                        ) : (
+                          <div className="h-9" />
                         )}
-                        <div className="flex items-center gap-2">
-                          <span className={`font-semibold ${
-                            category.id === "income" ? "text-green-600" : ""
-                          }`}>
-                            {formatAmount(category.id === "income" 
-                              ? category.totals.spendToDate
-                              : -category.totals.spendToDate
+                      </div>
+                      <span className={`font-semibold min-w-[100px] text-right ${
+                        category.id === "income" ? "text-green-600" : ""
+                      }`}>
+                        {formatAmount(category.id === "income" 
+                          ? category.totals.spendToDate
+                          : -category.totals.spendToDate
+                        )}
+                      </span>
+                      <div className="min-w-[70px] text-right">
+                        {category.totals.monthOverMonth !== 0 && (
+                          <div
+                            className={`flex items-center justify-end gap-1 text-sm ${
+                              category.totals.monthOverMonth > 0
+                                ? "text-destructive"
+                                : "text-green-600"
+                            }`}
+                          >
+                            {category.totals.monthOverMonth > 0 ? (
+                              <TrendingUp className="h-3 w-3" />
+                            ) : (
+                              <TrendingDown className="h-3 w-3" />
                             )}
-                          </span>
-                          {category.totals.monthOverMonth !== 0 && (
-                            <div
-                              className={`flex items-center gap-1 text-sm ${
-                                category.totals.monthOverMonth > 0
-                                  ? "text-destructive"
-                                  : "text-green-600"
-                              }`}
-                            >
-                              {category.totals.monthOverMonth > 0 ? (
-                                <TrendingUp className="h-3 w-3" />
-                              ) : (
-                                <TrendingDown className="h-3 w-3" />
-                              )}
-                              <span>{Math.abs(category.totals.monthOverMonth)}%</span>
-                            </div>
-                          )}
-                        </div>
+                            <span>{Math.abs(category.totals.monthOverMonth)}%</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </AccordionTrigger>
