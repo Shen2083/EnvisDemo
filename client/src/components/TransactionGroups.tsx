@@ -33,8 +33,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight, Plus } from "lucide-react";
+import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight, Plus, Calendar } from "lucide-react";
 import { CategoryInsightSheet } from "@/components/CategoryInsightSheet";
+import type { TimelineFilter } from "@/pages/Dashboard";
 
 interface Transaction {
   id: string;
@@ -75,6 +76,8 @@ interface TransactionGroupsProps {
   onAddCategory: (categoryName: string) => void;
   activeCategory?: TransactionCategory;
   onCloseInsights: () => void;
+  timelineFilter: TimelineFilter;
+  onTimelineFilterChange: (filter: TimelineFilter) => void;
 }
 
 export function TransactionGroups({
@@ -86,6 +89,8 @@ export function TransactionGroups({
   onAddCategory,
   activeCategory,
   onCloseInsights,
+  timelineFilter,
+  onTimelineFilterChange,
 }: TransactionGroupsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [moveToCategory, setMoveToCategory] = useState<string>("");
@@ -202,16 +207,49 @@ export function TransactionGroups({
               </DialogContent>
             </Dialog>
           </div>
-          <div className="relative mt-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search transactions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-              data-testid="input-search-transactions"
-            />
+          <div className="flex flex-wrap items-center gap-4 mt-4">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search transactions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+                data-testid="input-search-transactions"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Select value={timelineFilter} onValueChange={onTimelineFilterChange}>
+                <SelectTrigger className="w-[200px]" data-testid="select-timeline-filter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="current-month" data-testid="option-timeline-current-month">
+                    Current Month
+                  </SelectItem>
+                  <SelectItem value="previous-month" data-testid="option-timeline-previous-month">
+                    Previous Month
+                  </SelectItem>
+                  <SelectItem value="current-and-previous" data-testid="option-timeline-current-and-previous">
+                    Current + Previous Month
+                  </SelectItem>
+                  <SelectItem value="last-3-months" data-testid="option-timeline-last-3-months">
+                    Last 3 Months
+                  </SelectItem>
+                  <SelectItem value="last-6-months" data-testid="option-timeline-last-6-months">
+                    Last 6 Months
+                  </SelectItem>
+                  <SelectItem value="year-to-date" data-testid="option-timeline-year-to-date">
+                    Year to Date
+                  </SelectItem>
+                  <SelectItem value="last-2-years" data-testid="option-timeline-last-2-years">
+                    Last 2 Years
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
