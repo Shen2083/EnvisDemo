@@ -94,31 +94,54 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
     };
   };
 
+  const parseAmount = (value: string): number => {
+    const rangeMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)\s*-\s*£?([\d,]+(?:\.\d{1,2})?)/);
+    if (rangeMatch) {
+      const min = parseFloat(rangeMatch[1].replace(/,/g, ''));
+      const max = parseFloat(rangeMatch[2].replace(/,/g, ''));
+      return (min + max) / 2;
+    }
+    const singleMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)/);
+    return singleMatch ? parseFloat(singleMatch[1].replace(/,/g, '')) : 0;
+  };
+
   const potentialSavingsMetric = category.insight?.metrics?.find(
     (m) => m.label.toLowerCase().includes("potential savings") || m.label.toLowerCase().includes("potential")
   );
 
   let savingsPotential = null;
   let monthlySavings = 0;
+  let savingsSource = "";
   
   if (potentialSavingsMetric) {
-    const value = potentialSavingsMetric.value;
-    const rangeMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)\s*-\s*£?([\d,]+(?:\.\d{1,2})?)/);
+    monthlySavings = parseAmount(potentialSavingsMetric.value);
+    savingsSource = "identified opportunity";
+  } else if (category.insight?.metrics) {
+    const thisMonthMetric = category.insight.metrics.find(m => 
+      m.label.toLowerCase().includes("this month")
+    );
+    const lastMonthMetric = category.insight.metrics.find(m => 
+      m.label.toLowerCase().includes("last month")
+    );
+    const monthlyAverageMetric = category.insight.metrics.find(m => {
+      const label = m.label.toLowerCase();
+      return (label.includes("monthly average") || label === "average") && 
+             !label.includes("transaction");
+    });
     
-    if (rangeMatch) {
-      const min = parseFloat(rangeMatch[1].replace(/,/g, ''));
-      const max = parseFloat(rangeMatch[2].replace(/,/g, ''));
-      monthlySavings = (min + max) / 2;
-    } else {
-      const singleMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)/);
-      if (singleMatch) {
-        monthlySavings = parseFloat(singleMatch[1].replace(/,/g, ''));
+    if (thisMonthMetric && (lastMonthMetric || monthlyAverageMetric)) {
+      const currentAmount = parseAmount(thisMonthMetric.value);
+      const baselineAmount = parseAmount((lastMonthMetric || monthlyAverageMetric)!.value);
+      
+      if (currentAmount > baselineAmount) {
+        monthlySavings = currentAmount - baselineAmount;
+        savingsSource = lastMonthMetric ? "increase from last month" : "spending above average";
       }
     }
-    
-    if (monthlySavings > 0) {
-      savingsPotential = calculateSavingsPotential(monthlySavings);
-    }
+  }
+  
+  if (monthlySavings > 0) {
+    savingsPotential = calculateSavingsPotential(monthlySavings);
   }
 
   return (
@@ -198,15 +221,17 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
 
                 {savingsPotential && (
                   <div className="pt-4 border-t space-y-3">
-                    <h5 className="text-sm font-medium">Yearly Growth Potential</h5>
+                    <h5 className="text-sm font-medium">Savings Opportunity</h5>
                     <p className="text-xs text-muted-foreground">
-                      {potentialSavingsMetric 
+                      {savingsSource === "identified opportunity" 
                         ? "If you saved this amount for a year, here's what it could grow to:"
-                        : "Based on your monthly average, here's what this amount could grow to if invested for a year:"}
+                        : `By avoiding this ${savingsSource}, here's what you could save in a year:`}
                     </p>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Monthly Average</span>
+                        <span className="text-sm text-muted-foreground">
+                          {savingsSource === "identified opportunity" ? "Monthly Savings" : "Monthly Excess"}
+                        </span>
                         <span className="text-sm font-medium">{formatAmount(monthlySavings)}</span>
                       </div>
                       <div className="flex items-center justify-between">

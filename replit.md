@@ -23,10 +23,11 @@ The demo guides users through five key experiences:
 - Fixed "View Insights" button alignment using CSS Grid layout for consistent column positioning
 - Added custom category creation feature - users can now create new categories via dialog form
 - Implemented duplicate category name handling with automatic ID suffix generation
-- Added yearly savings potential projections showing index fund (8% return) and savings account (4.5% interest) growth
-  - Only displays when category has identified "Potential Savings" opportunities (e.g., consolidating subscriptions)
-  - Calculates from potential savings metrics with improved parsing for ranges and decimals
-  - Shows: Monthly Average, Yearly Total, Index Fund (8%), Savings Account (4.5%)
+- Added intelligent savings opportunity projections showing index fund (8% return) and savings account (4.5% interest) growth
+  - Detects spending increases: shows projections for excess spending above baseline (e.g., Eating Out £40 above average)
+  - Detects explicit opportunities: consolidating subscriptions, switching services (e.g., Entertainment with 3 streaming services)
+  - Displays contextual messaging: "Monthly Excess" for overspending, "Monthly Savings" for identified opportunities
+  - Shows: Monthly amount, Yearly Total, Index Fund (8%), Savings Account (4.5%)
 - Added timeline filter for transactions with 7 options: current month, previous month, current + previous, last 3/6 months, year to date, last 2 years
   - Default changed to "Current + Previous Month" for better demo data visibility
 - Implemented polished loading transition with animated progress indicators when moving from account linking to dashboard
