@@ -41,6 +41,44 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
     return `£${Math.abs(amount).toFixed(2)}`;
   };
 
+  const calculateSavingsPotential = (monthlySavings: number) => {
+    const yearlyPrincipal = monthlySavings * 12;
+    const indexFundReturn = 0.08;
+    const savingsAccountRate = 0.045;
+
+    const indexFundValue = yearlyPrincipal * (1 + indexFundReturn);
+    const savingsAccountValue = yearlyPrincipal * (1 + savingsAccountRate);
+
+    return {
+      indexFund: formatAmount(indexFundValue),
+      savingsAccount: formatAmount(savingsAccountValue),
+      yearlyPrincipal: formatAmount(yearlyPrincipal),
+    };
+  };
+
+  const potentialSavingsMetric = category.insight?.metrics?.find(
+    (m) => m.label.toLowerCase().includes("potential savings") || m.label.toLowerCase().includes("potential")
+  );
+
+  let savingsPotential = null;
+  if (potentialSavingsMetric) {
+    const value = potentialSavingsMetric.value;
+    const rangeMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)\s*-\s*£?([\d,]+(?:\.\d{1,2})?)/);
+    
+    if (rangeMatch) {
+      const min = parseFloat(rangeMatch[1].replace(/,/g, ''));
+      const max = parseFloat(rangeMatch[2].replace(/,/g, ''));
+      const monthlySavings = (min + max) / 2;
+      savingsPotential = calculateSavingsPotential(monthlySavings);
+    } else {
+      const singleMatch = value.match(/£?([\d,]+(?:\.\d{1,2})?)/);
+      if (singleMatch) {
+        const monthlySavings = parseFloat(singleMatch[1].replace(/,/g, ''));
+        savingsPotential = calculateSavingsPotential(monthlySavings);
+      }
+    }
+  }
+
   return (
     <Sheet open={!!category} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="sm:max-w-lg" data-testid="sheet-category-insights">
@@ -113,6 +151,29 @@ export function CategoryInsightSheet({ category, onClose }: CategoryInsightSheet
                         <span className="text-sm font-medium">{metric.value}</span>
                       </div>
                     ))}
+                  </div>
+                )}
+
+                {savingsPotential && (
+                  <div className="pt-4 border-t space-y-3">
+                    <h5 className="text-sm font-medium">Yearly Savings Potential</h5>
+                    <p className="text-xs text-muted-foreground">
+                      If you saved this amount for a year, here's what it could grow to:
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Saved (12 months)</span>
+                        <span className="text-sm font-medium">{savingsPotential.yearlyPrincipal}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">In Index Fund (8% return)</span>
+                        <span className="text-sm font-semibold text-green-600">{savingsPotential.indexFund}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">In Savings Account (4.5% interest)</span>
+                        <span className="text-sm font-semibold text-green-600">{savingsPotential.savingsAccount}</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </CardContent>
