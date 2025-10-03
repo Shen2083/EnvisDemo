@@ -24,7 +24,12 @@ The demo guides users through five key experiences:
 - Added custom category creation feature - users can now create new categories via dialog form
 - Implemented duplicate category name handling with automatic ID suffix generation
 - Added yearly savings potential projections showing index fund (8% return) and savings account (4.5% interest) growth for potential savings
+- Extended yearly growth projections to ALL categories (not just those with "Potential Savings" metrics)
+  - Calculates monthly average from actual transaction date spans for accurate projections
+  - Shows growth potential if category spending were saved/invested
+  - Displays: Monthly Average, Yearly Total, Index Fund (8%), Savings Account (4.5%)
 - Added timeline filter for transactions with 7 options: current month, previous month, current + previous, last 3/6 months, year to date, last 2 years
+  - Default changed to "Current + Previous Month" for better demo data visibility
 - Implemented polished loading transition with animated progress indicators when moving from account linking to dashboard
 
 **October 2, 2025**
