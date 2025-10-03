@@ -13,6 +13,14 @@ The demo guides users through five key experiences:
 
 ## Recent Updates
 
+**October 3, 2025**
+- Redesigned Dashboard with transaction grouping by category
+- Added accordion-based category view with expandable transaction tables
+- Implemented transaction selection and bulk move functionality between categories
+- Category-level insights now display in side panel (Sheet component) instead of full page
+- Real-time category totals update after transactions are moved
+- Amount formatting: Income shows positive (+£2500) in green, spending shows negative (-£165.40)
+
 **October 2, 2025**
 - Updated messaging to match envis.money brand (focus on problems solved vs. AI features)
 - Added full CRUD for Goals: create, edit, delete with confirmation dialogs
@@ -49,9 +57,13 @@ Preferred communication style: Simple, everyday language.
 
 ### 4. Dashboard (/dashboard)
 - Unified balance summary across all family accounts
-- Recent transactions feed with categorization
-- Quick access to goals and insights
-- Real-time family financial overview
+- Transaction grouping by category with accordion view
+- Expandable categories showing transaction tables with selection checkboxes
+- Bulk transaction actions: select and move transactions between categories
+- Category-level insights accessible via side panel (Sheet component)
+- Real-time category totals with month-over-month comparisons
+- Search functionality across all transactions
+- Amount formatting with proper signs: Income positive (+£2500) in green, spending negative (-£165.40)
 
 ## System Architecture
 
