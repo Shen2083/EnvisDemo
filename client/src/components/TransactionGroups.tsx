@@ -118,8 +118,12 @@ export function TransactionGroups({
   };
 
   const formatAmount = (amount: number) => {
-    const isPositive = amount >= 0;
-    return `${isPositive ? "+" : ""}£${Math.abs(amount).toFixed(2)}`;
+    if (amount < 0) {
+      return `-£${Math.abs(amount).toFixed(2)}`;
+    } else if (amount > 0) {
+      return `+£${amount.toFixed(2)}`;
+    }
+    return `£${amount.toFixed(2)}`;
   };
 
   return (
@@ -216,8 +220,13 @@ export function TransactionGroups({
                           </Button>
                         )}
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold">
-                            {formatAmount(-category.totals.spendToDate)}
+                          <span className={`font-semibold ${
+                            category.id === "income" ? "text-green-600" : ""
+                          }`}>
+                            {formatAmount(category.id === "income" 
+                              ? category.totals.spendToDate
+                              : -category.totals.spendToDate
+                            )}
                           </span>
                           {category.totals.monthOverMonth !== 0 && (
                             <div

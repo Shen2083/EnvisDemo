@@ -178,33 +178,56 @@ export default function Dashboard() {
 
   const handleMoveTransactions = (transactionIds: string[], targetCategoryId: string) => {
     setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      const targetCategory = newCategories.find((c) => c.id === targetCategoryId);
-      if (!targetCategory) return prevCategories;
-
       const transactionsToMove: Transaction[] = [];
-      newCategories.forEach((category) => {
-        category.transactions = category.transactions.filter((tx) => {
+      
+      const newCategories = prevCategories.map((category) => {
+        if (category.id === targetCategoryId) {
+          return category;
+        }
+
+        const remainingTransactions = category.transactions.filter((tx) => {
           if (transactionIds.includes(tx.id)) {
-            transactionsToMove.push({ ...tx, category: targetCategory.name });
+            const targetCat = prevCategories.find((c) => c.id === targetCategoryId);
+            transactionsToMove.push({ ...tx, category: targetCat?.name || tx.category });
             return false;
           }
           return true;
         });
-      });
 
-      targetCategory.transactions.push(...transactionsToMove);
-      
-      newCategories.forEach((category) => {
-        const total = category.transactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-        category.totals = {
-          ...category.totals,
-          spendToDate: total,
-          transactionCount: category.transactions.length,
+        const total = remainingTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+        const lastMonthTotal = category.totals.spendToDate / (1 + category.totals.monthOverMonth / 100);
+        const newMonthOverMonth = lastMonthTotal > 0 ? ((total - lastMonthTotal) / lastMonthTotal) * 100 : 0;
+
+        return {
+          ...category,
+          transactions: remainingTransactions,
+          totals: {
+            spendToDate: total,
+            monthOverMonth: Number(newMonthOverMonth.toFixed(1)),
+            transactionCount: remainingTransactions.length,
+          },
         };
       });
 
-      return newCategories;
+      return newCategories.map((category) => {
+        if (category.id === targetCategoryId) {
+          const updatedTransactions = [...category.transactions, ...transactionsToMove];
+          const total = updatedTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+          const lastMonthTotal = category.totals.spendToDate / (1 + category.totals.monthOverMonth / 100);
+          const newMonthOverMonth = lastMonthTotal > 0 ? ((total - lastMonthTotal) / lastMonthTotal) * 100 : 0;
+
+          return {
+            ...category,
+            transactions: updatedTransactions,
+            totals: {
+              spendToDate: total,
+              monthOverMonth: Number(newMonthOverMonth.toFixed(1)),
+              transactionCount: updatedTransactions.length,
+            },
+          };
+        }
+        return category;
+      });
     });
 
     setSelectedTransactionIds([]);
