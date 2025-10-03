@@ -8,6 +8,8 @@ interface Transaction {
   amount: number;
   date: string;
   accountLabel: string;
+  accountOwner: string; // Name of the account owner
+  ownershipType: "individual" | "joint"; // Account ownership type
   category: string;
 }
 
@@ -47,9 +49,9 @@ const mockCategories: TransactionCategory[] = [
     id: "groceries",
     name: "Groceries",
     transactions: [
-      { id: "1", merchantName: "Tesco", amount: -55.40, date: "28 Sep 2025", accountLabel: "Joint Account", category: "Groceries" },
-      { id: "8", merchantName: "Sainsbury's", amount: -67.20, date: "24 Sep 2025", accountLabel: "Joint Account", category: "Groceries" },
-      { id: "12", merchantName: "Waitrose", amount: -42.80, date: "21 Sep 2025", accountLabel: "Joint Account", category: "Groceries" },
+      { id: "1", merchantName: "Tesco", amount: -55.40, date: "28 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Groceries" },
+      { id: "8", merchantName: "Sainsbury's", amount: -67.20, date: "24 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Groceries" },
+      { id: "12", merchantName: "Waitrose", amount: -42.80, date: "21 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Groceries" },
     ],
     totals: {
       spendToDate: 165.40,
@@ -70,9 +72,9 @@ const mockCategories: TransactionCategory[] = [
     id: "eating-out",
     name: "Eating Out",
     transactions: [
-      { id: "9", merchantName: "Costa Coffee", amount: -12.50, date: "23 Sep 2025", accountLabel: "Personal Account", category: "Eating Out" },
-      { id: "10", merchantName: "The Italian Restaurant", amount: -85.00, date: "22 Sep 2025", accountLabel: "Joint Account", category: "Eating Out" },
-      { id: "13", merchantName: "Pizza Express", amount: -55.00, date: "20 Sep 2025", accountLabel: "Joint Account", category: "Eating Out" },
+      { id: "9", merchantName: "Costa Coffee", amount: -12.50, date: "23 Sep 2025", accountLabel: "Personal Account", accountOwner: "Alex", ownershipType: "individual", category: "Eating Out" },
+      { id: "10", merchantName: "The Italian Restaurant", amount: -85.00, date: "22 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Eating Out" },
+      { id: "13", merchantName: "Pizza Express", amount: -55.00, date: "20 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Eating Out" },
     ],
     totals: {
       spendToDate: 152.50,
@@ -93,9 +95,9 @@ const mockCategories: TransactionCategory[] = [
     id: "entertainment",
     name: "Entertainment",
     transactions: [
-      { id: "4", merchantName: "Netflix", amount: -11.99, date: "26 Sep 2025", accountLabel: "Joint Account", category: "Entertainment" },
-      { id: "5", merchantName: "Disney+", amount: -7.99, date: "25 Sep 2025", accountLabel: "Joint Account", category: "Entertainment" },
-      { id: "7", merchantName: "Prime Video", amount: -8.99, date: "24 Sep 2025", accountLabel: "Joint Account", category: "Entertainment" },
+      { id: "4", merchantName: "Netflix", amount: -11.99, date: "26 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Entertainment" },
+      { id: "5", merchantName: "Disney+", amount: -7.99, date: "25 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Entertainment" },
+      { id: "7", merchantName: "Prime Video", amount: -8.99, date: "24 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Entertainment" },
     ],
     totals: {
       spendToDate: 28.97,
@@ -116,8 +118,8 @@ const mockCategories: TransactionCategory[] = [
     id: "transport",
     name: "Transport",
     transactions: [
-      { id: "6", merchantName: "Shell Petrol", amount: -45.50, date: "25 Sep 2025", accountLabel: "Personal Account", category: "Transport" },
-      { id: "11", merchantName: "Uber", amount: -18.50, date: "22 Sep 2025", accountLabel: "Personal Account", category: "Transport" },
+      { id: "6", merchantName: "Shell Petrol", amount: -45.50, date: "25 Sep 2025", accountLabel: "Personal Account", accountOwner: "Alex", ownershipType: "individual", category: "Transport" },
+      { id: "11", merchantName: "Uber", amount: -18.50, date: "22 Sep 2025", accountLabel: "Personal Account", accountOwner: "Sam", ownershipType: "individual", category: "Transport" },
     ],
     totals: {
       spendToDate: 64.00,
@@ -137,8 +139,8 @@ const mockCategories: TransactionCategory[] = [
     id: "shopping",
     name: "Shopping",
     transactions: [
-      { id: "2", merchantName: "Amazon.co.uk", amount: -89.99, date: "27 Sep 2025", accountLabel: "Shen's Amex", category: "Shopping" },
-      { id: "14", merchantName: "Sports Direct", amount: -34.99, date: "19 Sep 2025", accountLabel: "Personal Account", category: "Shopping" },
+      { id: "2", merchantName: "Amazon.co.uk", amount: -89.99, date: "27 Sep 2025", accountLabel: "Sam's Amex", accountOwner: "Sam", ownershipType: "individual", category: "Shopping" },
+      { id: "14", merchantName: "Sports Direct", amount: -34.99, date: "19 Sep 2025", accountLabel: "Personal Account", accountOwner: "Alex", ownershipType: "individual", category: "Shopping" },
     ],
     totals: {
       spendToDate: 124.98,
@@ -150,7 +152,7 @@ const mockCategories: TransactionCategory[] = [
     id: "income",
     name: "Income",
     transactions: [
-      { id: "3", merchantName: "Salary Deposit", amount: 2500.00, date: "27 Sep 2025", accountLabel: "Personal Account", category: "Income" },
+      { id: "3", merchantName: "Salary Deposit", amount: 2500.00, date: "27 Sep 2025", accountLabel: "Personal Account", accountOwner: "Alex", ownershipType: "individual", category: "Income" },
     ],
     totals: {
       spendToDate: 2500.00,
@@ -162,7 +164,7 @@ const mockCategories: TransactionCategory[] = [
     id: "savings",
     name: "Savings",
     transactions: [
-      { id: "15", merchantName: "Transfer to Savings", amount: -500.00, date: "15 Sep 2025", accountLabel: "Joint Account", category: "Savings" },
+      { id: "15", merchantName: "Transfer to Savings", amount: -500.00, date: "15 Sep 2025", accountLabel: "Joint Account", accountOwner: "Alex & Sam", ownershipType: "joint", category: "Savings" },
     ],
     totals: {
       spendToDate: 500.00,
@@ -180,11 +182,14 @@ const mockCategories: TransactionCategory[] = [
   },
 ];
 
+export type OwnershipFilter = "all" | "individual" | "joint";
+
 export default function Dashboard() {
   const [categories, setCategories] = useState<TransactionCategory[]>(mockCategories);
   const [selectedTransactionIds, setSelectedTransactionIds] = useState<string[]>([]);
   const [activeInsightCategoryId, setActiveInsightCategoryId] = useState<string | null>(null);
   const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>("current-and-previous");
+  const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>("all");
 
   const parseTransactionDate = (dateStr: string): Date => {
     const months: { [key: string]: number } = {
@@ -374,6 +379,8 @@ export default function Dashboard() {
         onCloseInsights={() => setActiveInsightCategoryId(null)}
         timelineFilter={timelineFilter}
         onTimelineFilterChange={setTimelineFilter}
+        ownershipFilter={ownershipFilter}
+        onOwnershipFilterChange={setOwnershipFilter}
       />
     </div>
   );

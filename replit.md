@@ -13,7 +13,32 @@ The demo guides users through five key experiences:
 
 ## Recent Updates
 
-**October 3, 2025**
+**October 3, 2025 - Multi-Family Member Support**
+- **Family Members Management** (/family): Complete family member invitation and management system
+  - Invite family members via email with pending invitation tracking
+  - Remove members with confirmation dialogs (admins cannot be removed)
+  - Cancel pending invitations
+  - Email validation and duplicate detection (already member, already invited)
+  - Toast notifications for all actions
+- **Account Ownership Tracking**: Transactions now show account owner information
+  - Added "Owner" column to transaction tables showing account owner name
+  - Joint accounts display "(Joint)" indicator
+  - Individual accounts show specific owner name (e.g., "Alex", "Sam")
+- **Ownership Filter**: New dropdown to filter transactions by account type
+  - "All Accounts" - Shows all transactions (default)
+  - "Individual Only" - Shows only individually-owned account transactions
+  - "Joint Only" - Shows only joint account transactions
+- **Data Model Updates**: Enhanced schema to support multi-family member workflows
+  - families table: Container for family groups
+  - familyMembers: Users in family with roles (admin/member) and status
+  - familyInvites: Email-based invitations with tokens and expiry
+  - accountOwners: Junction table supporting multiple owners per account
+  - connectedAccounts: Updated with externalAccountId for duplicate detection
+- **Mock Data**: Updated with ownership information across all transactions
+  - Joint accounts: "Alex & Sam" with ownershipType: "joint"
+  - Individual accounts: Specific owners (Alex or Sam) with ownershipType: "individual"
+
+**October 3, 2025 - Earlier Updates**
 - Redesigned Dashboard with transaction grouping by category
 - Added accordion-based category view with expandable transaction tables
 - Implemented transaction selection and bulk move functionality between categories
@@ -45,31 +70,43 @@ Preferred communication style: Simple, everyday language.
 
 ## Key Features Implemented
 
-### 1. Account Management (/accounts)
+### 1. Family Members Management (/family)
+- Invite family members via email with validation
+- View active members with roles (admin/member) and linked account counts
+- Remove family members with confirmation (admins protected)
+- Track pending invitations with expiry information
+- Cancel pending invitations
+- Duplicate detection: prevents re-inviting existing members or pending invites
+- Toast notifications for all actions (invite sent, member removed, etc.)
+
+### 2. Account Management (/accounts)
 - View all connected bank accounts with balances, statuses, and sync times
 - Refresh account connections with loading states
 - Add new accounts via Open Banking flow
 - Remove accounts with confirmation dialogs
 - Status indicators: Connected, Needs Refresh, Connection Error
+- Account ownership tracking (individual vs joint accounts)
 
-### 2. Goal Management (/goals)
+### 3. Goal Management (/goals)
 - Create new family savings goals with target amounts and dates
 - Edit existing goals with pre-filled forms
 - Delete goals with confirmation
 - Automatic monthly contribution calculator
 - Progress tracking with visual indicators
 
-### 3. Smart Insights (/insights)
+### 4. Smart Insights (/insights)
 - Four insight types: cashflow, subscriptions, spending, goal progress
 - Click any insight for detailed review screen
 - Data breakdowns with specific recommendations
 - "Take Action" and "Dismiss" functionality
 - Color-coded by insight type
 
-### 4. Dashboard (/dashboard)
+### 5. Dashboard (/dashboard)
 - Unified balance summary across all family accounts
 - Transaction grouping by category with accordion view
 - Expandable categories showing transaction tables with selection checkboxes
+- **Account ownership display**: Each transaction shows owner name and joint/individual indicator
+- **Ownership filter**: Filter transactions by "All Accounts", "Individual Only", or "Joint Only"
 - Bulk transaction actions: select and move transactions between categories
 - Create custom categories with dialog form (automatically handles duplicate names)
 - Category-level insights accessible via side panel (Sheet component)

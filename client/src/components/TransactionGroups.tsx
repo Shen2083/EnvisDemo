@@ -33,7 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight, Plus, Calendar } from "lucide-react";
+import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight, Plus, Calendar, Users } from "lucide-react";
 import { CategoryInsightSheet } from "@/components/CategoryInsightSheet";
 import type { TimelineFilter } from "@/pages/Dashboard";
 
@@ -43,6 +43,8 @@ interface Transaction {
   amount: number;
   date: string;
   accountLabel: string;
+  accountOwner: string;
+  ownershipType: "individual" | "joint";
   category: string;
 }
 
@@ -67,6 +69,8 @@ interface TransactionCategory {
   insight?: CategoryInsight;
 }
 
+export type OwnershipFilter = "all" | "individual" | "joint";
+
 interface TransactionGroupsProps {
   categories: TransactionCategory[];
   selectedTransactionIds: string[];
@@ -78,6 +82,8 @@ interface TransactionGroupsProps {
   onCloseInsights: () => void;
   timelineFilter: TimelineFilter;
   onTimelineFilterChange: (filter: TimelineFilter) => void;
+  ownershipFilter: OwnershipFilter;
+  onOwnershipFilterChange: (filter: OwnershipFilter) => void;
 }
 
 export function TransactionGroups({
@@ -91,6 +97,8 @@ export function TransactionGroups({
   onCloseInsights,
   timelineFilter,
   onTimelineFilterChange,
+  ownershipFilter,
+  onOwnershipFilterChange,
 }: TransactionGroupsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [moveToCategory, setMoveToCategory] = useState<string>("");
@@ -101,12 +109,19 @@ export function TransactionGroups({
     .map((category) => ({
       ...category,
       transactions: category.transactions.filter(
-        (tx) =>
-          tx.merchantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tx.category.toLowerCase().includes(searchQuery.toLowerCase())
+        (tx) => {
+          const matchesSearch = 
+            tx.merchantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tx.category.toLowerCase().includes(searchQuery.toLowerCase());
+          
+          const matchesOwnership = 
+            ownershipFilter === "all" || tx.ownershipType === ownershipFilter;
+          
+          return matchesSearch && matchesOwnership;
+        }
       ),
     }))
-    .filter((category) => category.transactions.length > 0 || searchQuery === "");
+    .filter((category) => category.transactions.length > 0 || (searchQuery === "" && ownershipFilter === "all"));
 
   const handleToggleTransaction = (transactionId: string) => {
     if (selectedTransactionIds.includes(transactionId)) {
@@ -250,6 +265,25 @@ export function TransactionGroups({
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <Select value={ownershipFilter} onValueChange={onOwnershipFilterChange}>
+                <SelectTrigger className="w-[180px]" data-testid="select-ownership-filter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" data-testid="option-ownership-all">
+                    All Accounts
+                  </SelectItem>
+                  <SelectItem value="individual" data-testid="option-ownership-individual">
+                    Individual Only
+                  </SelectItem>
+                  <SelectItem value="joint" data-testid="option-ownership-joint">
+                    Joint Only
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -375,6 +409,7 @@ export function TransactionGroups({
                             <TableHead>Merchant</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Account</TableHead>
+                            <TableHead>Owner</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -393,6 +428,14 @@ export function TransactionGroups({
                               <TableCell>{tx.date}</TableCell>
                               <TableCell className="text-muted-foreground text-sm">
                                 {tx.accountLabel}
+                              </TableCell>
+                              <TableCell className="text-sm">
+                                <div className="flex items-center gap-2">
+                                  <span>{tx.accountOwner}</span>
+                                  {tx.ownershipType === "joint" && (
+                                    <span className="text-xs text-muted-foreground">(Joint)</span>
+                                  )}
+                                </div>
                               </TableCell>
                               <TableCell
                                 className={`text-right font-medium ${
