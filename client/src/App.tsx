@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LoadingTransition } from "@/components/LoadingTransition";
 import NotFound from "@/pages/not-found";
 import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
@@ -60,10 +61,14 @@ function Navigation() {
 }
 
 function Router() {
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [stage, setStage] = useState<"welcome" | "loading" | "app">("welcome");
 
-  if (showWelcome) {
-    return <Welcome onComplete={() => setShowWelcome(false)} />;
+  if (stage === "welcome") {
+    return <Welcome onComplete={() => setStage("loading")} />;
+  }
+
+  if (stage === "loading") {
+    return <LoadingTransition onComplete={() => setStage("app")} />;
   }
 
   return (
