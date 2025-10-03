@@ -23,6 +23,7 @@ The demo guides users through five key experiences:
 - Fixed "View Insights" button alignment using CSS Grid layout for consistent column positioning
 - Added custom category creation feature - users can now create new categories via dialog form
 - Implemented duplicate category name handling with automatic ID suffix generation
+- Added yearly savings potential projections showing index fund (8% return) and savings account (4.5% interest) growth for potential savings
 
 **October 2, 2025**
 - Updated messaging to match envis.money brand (focus on problems solved vs. AI features)
