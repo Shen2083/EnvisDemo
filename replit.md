@@ -20,6 +20,9 @@ The demo guides users through five key experiences:
 - Category-level insights now display in side panel (Sheet component) instead of full page
 - Real-time category totals update after transactions are moved
 - Amount formatting: Income shows positive (+£2500) in green, spending shows negative (-£165.40)
+- Fixed "View Insights" button alignment using CSS Grid layout for consistent column positioning
+- Added custom category creation feature - users can now create new categories via dialog form
+- Implemented duplicate category name handling with automatic ID suffix generation
 
 **October 2, 2025**
 - Updated messaging to match envis.money brand (focus on problems solved vs. AI features)
@@ -60,10 +63,12 @@ Preferred communication style: Simple, everyday language.
 - Transaction grouping by category with accordion view
 - Expandable categories showing transaction tables with selection checkboxes
 - Bulk transaction actions: select and move transactions between categories
+- Create custom categories with dialog form (automatically handles duplicate names)
 - Category-level insights accessible via side panel (Sheet component)
 - Real-time category totals with month-over-month comparisons
 - Search functionality across all transactions
 - Amount formatting with proper signs: Income positive (+£2500) in green, spending negative (-£165.40)
+- Grid-based layout ensures consistent alignment of View Insights buttons and amounts
 
 ## System Architecture
 
