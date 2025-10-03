@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { BalanceSummary } from "@/components/BalanceSummary";
 import { TransactionGroups } from "@/components/TransactionGroups";
 
@@ -10,6 +10,15 @@ interface Transaction {
   accountLabel: string;
   category: string;
 }
+
+export type TimelineFilter = 
+  | "current-month"
+  | "previous-month"
+  | "current-and-previous"
+  | "last-3-months"
+  | "last-6-months"
+  | "year-to-date"
+  | "last-2-years";
 
 interface CategoryInsight {
   headline: string;
@@ -175,6 +184,83 @@ export default function Dashboard() {
   const [categories, setCategories] = useState<TransactionCategory[]>(mockCategories);
   const [selectedTransactionIds, setSelectedTransactionIds] = useState<string[]>([]);
   const [activeInsightCategoryId, setActiveInsightCategoryId] = useState<string | null>(null);
+  const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>("current-month");
+
+  const parseTransactionDate = (dateStr: string): Date => {
+    const months: { [key: string]: number } = {
+      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+    };
+    const parts = dateStr.split(" ");
+    const day = parseInt(parts[0]);
+    const month = months[parts[1]];
+    const year = parseInt(parts[2]);
+    return new Date(year, month, day);
+  };
+
+  const isWithinTimeline = (transactionDate: Date, timeline: TimelineFilter): boolean => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    switch (timeline) {
+      case "current-month": {
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear;
+      }
+      case "previous-month": {
+        const prevMonth = new Date(currentYear, currentMonth - 1);
+        return transactionDate.getMonth() === prevMonth.getMonth() && 
+               transactionDate.getFullYear() === prevMonth.getFullYear();
+      }
+      case "current-and-previous": {
+        const prevMonth = new Date(currentYear, currentMonth - 1);
+        return (
+          (transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear) ||
+          (transactionDate.getMonth() === prevMonth.getMonth() && transactionDate.getFullYear() === prevMonth.getFullYear())
+        );
+      }
+      case "last-3-months": {
+        const threeMonthsAgo = new Date(currentYear, currentMonth - 2, 1);
+        return transactionDate >= threeMonthsAgo;
+      }
+      case "last-6-months": {
+        const sixMonthsAgo = new Date(currentYear, currentMonth - 5, 1);
+        return transactionDate >= sixMonthsAgo;
+      }
+      case "year-to-date": {
+        const yearStart = new Date(currentYear, 0, 1);
+        return transactionDate >= yearStart;
+      }
+      case "last-2-years": {
+        const twoYearsAgo = new Date(currentYear - 2, currentMonth, 1);
+        return transactionDate >= twoYearsAgo;
+      }
+      default:
+        return true;
+    }
+  };
+
+  const filteredCategories = useMemo(() => {
+    return categories.map((category) => {
+      const filteredTransactions = category.transactions.filter((tx) => {
+        const txDate = parseTransactionDate(tx.date);
+        return isWithinTimeline(txDate, timelineFilter);
+      });
+
+      const total = filteredTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+      
+      return {
+        ...category,
+        transactions: filteredTransactions,
+        totals: {
+          ...category.totals,
+          spendToDate: total,
+          transactionCount: filteredTransactions.length,
+        },
+      };
+    });
+  }, [categories, timelineFilter]);
 
   const handleMoveTransactions = (transactionIds: string[], targetCategoryId: string) => {
     setCategories((prevCategories) => {
@@ -259,7 +345,7 @@ export default function Dashboard() {
     });
   };
 
-  const activeCategory = categories.find((c) => c.id === activeInsightCategoryId);
+  const activeCategory = filteredCategories.find((c) => c.id === activeInsightCategoryId);
 
   return (
     <div className="min-h-screen p-6 space-y-6">
@@ -278,7 +364,7 @@ export default function Dashboard() {
       />
 
       <TransactionGroups
-        categories={categories}
+        categories={filteredCategories}
         selectedTransactionIds={selectedTransactionIds}
         onSelectionChange={setSelectedTransactionIds}
         onMoveTransactions={handleMoveTransactions}
@@ -286,6 +372,8 @@ export default function Dashboard() {
         onAddCategory={handleAddCategory}
         activeCategory={activeCategory}
         onCloseInsights={() => setActiveInsightCategoryId(null)}
+        timelineFilter={timelineFilter}
+        onTimelineFilterChange={setTimelineFilter}
       />
     </div>
   );
