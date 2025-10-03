@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, TrendingUp, TrendingDown, Lightbulb, MoveRight } from "lucide-react";
-import { CategoryInsightSheet } from "./CategoryInsightSheet";
+import { CategoryInsightSheet } from "@/components/CategoryInsightSheet";
 
 interface Transaction {
   id: string;
