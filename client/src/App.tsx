@@ -13,7 +13,8 @@ import Dashboard from "@/pages/Dashboard";
 import Goals from "@/pages/Goals";
 import Insights from "@/pages/Insights";
 import Accounts from "@/pages/Accounts";
-import { LayoutDashboard, Target, Lightbulb, Building2 } from "lucide-react";
+import FamilyMembers from "@/pages/FamilyMembers";
+import { LayoutDashboard, Target, Lightbulb, Building2, Users } from "lucide-react";
 
 function Navigation() {
   const [location] = useLocation();
@@ -23,6 +24,7 @@ function Navigation() {
     { path: "/goals", label: "Goals", icon: Target },
     { path: "/insights", label: "Insights", icon: Lightbulb },
     { path: "/accounts", label: "Accounts", icon: Building2 },
+    { path: "/family", label: "Family", icon: Users },
   ];
 
   return (
@@ -80,6 +82,7 @@ function Router() {
         <Route path="/goals" component={Goals} />
         <Route path="/insights" component={Insights} />
         <Route path="/accounts" component={Accounts} />
+        <Route path="/family" component={FamilyMembers} />
         <Route component={NotFound} />
       </Switch>
     </>
