@@ -19,11 +19,13 @@ The demo guides users through five key experiences:
 - Implemented transaction selection and bulk move functionality between categories
 - Category-level insights now display in side panel (Sheet component) instead of full page
 - Real-time category totals update after transactions are moved
-- Amount formatting: Income shows positive (+£2500) in green, spending shows negative (-£165.40)
+- Amount formatting: Income shows positive (+£2500) in green, spending negative (-£165.40)
 - Fixed "View Insights" button alignment using CSS Grid layout for consistent column positioning
 - Added custom category creation feature - users can now create new categories via dialog form
 - Implemented duplicate category name handling with automatic ID suffix generation
 - Added yearly savings potential projections showing index fund (8% return) and savings account (4.5% interest) growth for potential savings
+- Added timeline filter for transactions with 7 options: current month, previous month, current + previous, last 3/6 months, year to date, last 2 years
+- Implemented polished loading transition with animated progress indicators when moving from account linking to dashboard
 
 **October 2, 2025**
 - Updated messaging to match envis.money brand (focus on problems solved vs. AI features)
