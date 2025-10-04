@@ -83,11 +83,12 @@ const mockCategories: TransactionCategory[] = [
     },
     insight: {
       headline: "Eating Out Above Average",
-      body: "Your family's eating out spending is £152 this month, 36% higher than your £112 monthly average. Consider setting a budget limit.",
+      body: "Your family's eating out spending is £152 this month, 36% higher than your £112 monthly average. Reducing this could accelerate your House Deposit goal by 11 months.",
       metrics: [
         { label: "This Month", value: "£152.50" },
         { label: "Monthly Average", value: "£112.30" },
         { label: "Largest", value: "£85.00 - Italian Restaurant" },
+        { label: "Connected Goal", value: "House Deposit" },
       ],
     },
   },
@@ -106,11 +107,12 @@ const mockCategories: TransactionCategory[] = [
     },
     insight: {
       headline: "Multiple Streaming Subscriptions",
-      body: "You have 3 streaming subscriptions costing £29/month. Consider consolidating to save money.",
+      body: "You have 3 streaming subscriptions costing £29/month. Consolidating could save £35/month and boost your Emergency Fund.",
       metrics: [
         { label: "Monthly Cost", value: "£28.97" },
         { label: "Annual Cost", value: "£347.64" },
-        { label: "Potential Savings", value: "£15-20/month" },
+        { label: "Potential Savings", value: "£35/month" },
+        { label: "Connected Goal", value: "Emergency Fund" },
       ],
     },
   },
@@ -364,8 +366,8 @@ export default function Dashboard() {
       <BalanceSummary
         totalBalance={15300.50}
         monthlyNetFlow={750.00}
-        activeGoals={2}
-        pendingAlerts={4}
+        activeGoals={4}
+        pendingAlerts={6}
       />
 
       <TransactionGroups
