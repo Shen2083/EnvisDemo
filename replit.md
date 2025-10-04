@@ -4,14 +4,32 @@
 
 Envis is your family's financial partner—an intelligent financial coach that proactively coordinates goals, prevents financial stress, and builds collective wealth. This is a high-fidelity interactive demo built to showcase core product features to stakeholders using a "Wizard of Oz" methodology—the front-end experience is fully functional and polished, while the back-end uses mock data and simulated responses rather than production AI systems.
 
-The demo guides users through five key experiences:
+The demo guides users through six key experiences:
 1. **Onboarding & Account Linking** - Secure bank account connection via Open Banking
 2. **Dashboard View** - Unified family financial overview with transaction feeds across all accounts
-3. **Goal Management** - Create, edit, and delete shared family financial goals with progress tracking
-4. **Smart Insights** - Proactive financial recommendations with detailed review screens and actionable next steps
-5. **Account Management** - View, refresh, add, and remove connected bank accounts
+3. **AI Financial Coach** - Personalized coaching connecting income patterns, spending habits, and goal achievement
+4. **Goal Management** - Create, edit, and delete shared family financial goals with progress tracking
+5. **Smart Insights** - Proactive financial recommendations with detailed review screens and actionable next steps
+6. **Account Management** - View, refresh, add, and remove connected bank accounts
 
 ## Recent Updates
+
+**October 4, 2025 - AI Financial Coach**
+- **AI Coaching Page** (/coaching): Comprehensive financial coaching showing the complete picture
+  - **Income Pattern Analysis**: Monthly income trends, last 3 months average, next expected income date
+  - **Spending Pattern Analysis**: This month vs average spending, variance tracking, top spending categories with visual breakdowns
+  - **Goal Impact Calculator**: Shows how income and spending patterns directly affect goal achievement
+    - Monthly available funds calculation (income - spending)
+    - Current vs recommended allocation amounts
+    - Projected completion date based on spending optimization
+    - "Months ahead/behind schedule" metric for motivation
+  - **AI Recommendations**: Personalized, encouraging suggestions with one-click actions
+    - Analyzes spending variance and suggests reallocation
+    - Shows exact impact on goal timeline
+    - Interactive "Apply Recommendation" with state updates and confirmations
+  - **Quick Actions**: Budget alerts, automatic savings setup, goal reviews
+  - **Wholesome Financial Picture**: Visual flow showing Income → Spending → Available Funds → Goal Achievement
+  - **Encouraging Tone**: Non-judgmental, action-oriented coaching that celebrates progress
 
 **October 3, 2025 - Multi-Family Member Support**
 - **Family Members Management** (/family): Complete family member invitation and management system
@@ -70,7 +88,22 @@ Preferred communication style: Simple, everyday language.
 
 ## Key Features Implemented
 
-### 1. Family Members Management (/family)
+### 1. AI Financial Coach (/coaching)
+- **Income Pattern Analysis**: Shows monthly income (£2,500), trends, and next expected income
+- **Spending Pattern Visualization**: Displays current spending vs average with top categories
+- **Goal Impact Calculator**: Calculates how income-spending affects goal achievement timeline
+- **AI Recommendations**: Personalized suggestions showing exact impact on goals
+  - Analyzes spending variance (e.g., £68 above average this month)
+  - Suggests optimal allocation (e.g., £568/month to House Deposit)
+  - Projects new completion date (e.g., 11 months ahead of schedule)
+- **Interactive Actions**: One-click "Apply Recommendation" with visual feedback
+  - Updates allocation amounts dynamically
+  - Shows success indicators and confirmation toasts
+  - Provides quick access to budget alerts and auto-save setup
+- **Wholesome Financial Picture**: Complete view connecting income → spending → goals
+- **Encouraging Coaching Tone**: Celebrates progress, frames challenges as opportunities
+
+### 2. Family Members Management (/family)
 - Invite family members via email with validation
 - View active members with roles (admin/member) and linked account counts
 - Remove family members with confirmation (admins protected)
@@ -79,7 +112,7 @@ Preferred communication style: Simple, everyday language.
 - Duplicate detection: prevents re-inviting existing members or pending invites
 - Toast notifications for all actions (invite sent, member removed, etc.)
 
-### 2. Account Management (/accounts)
+### 3. Account Management (/accounts)
 - View all connected bank accounts with balances, statuses, and sync times
 - Refresh account connections with loading states
 - Add new accounts via Open Banking flow
@@ -87,21 +120,21 @@ Preferred communication style: Simple, everyday language.
 - Status indicators: Connected, Needs Refresh, Connection Error
 - Account ownership tracking (individual vs joint accounts)
 
-### 3. Goal Management (/goals)
+### 4. Goal Management (/goals)
 - Create new family savings goals with target amounts and dates
 - Edit existing goals with pre-filled forms
 - Delete goals with confirmation
 - Automatic monthly contribution calculator
 - Progress tracking with visual indicators
 
-### 4. Smart Insights (/insights)
+### 5. Smart Insights (/insights)
 - Four insight types: cashflow, subscriptions, spending, goal progress
 - Click any insight for detailed review screen
 - Data breakdowns with specific recommendations
 - "Take Action" and "Dismiss" functionality
 - Color-coded by insight type
 
-### 5. Dashboard (/dashboard)
+### 6. Dashboard (/dashboard)
 - Unified balance summary across all family accounts
 - Transaction grouping by category with accordion view
 - Expandable categories showing transaction tables with selection checkboxes
