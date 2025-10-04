@@ -1,18 +1,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
+  MessageCircle,
   TrendingUp,
-  TrendingDown,
-  Target,
-  Sparkles,
-  ArrowRight,
   Calendar,
-  DollarSign,
-  PiggyBank,
+  Target,
+  CheckCircle2,
+  Lightbulb,
 } from "lucide-react";
 
 interface Goal {
@@ -23,38 +19,41 @@ interface Goal {
   targetDate: string;
 }
 
-interface IncomePattern {
-  monthlyIncome: number;
-  lastThreeMonths: number[];
-  trend: "up" | "down" | "stable";
-  nextExpected: {
-    amount: number;
-    date: string;
-  };
-}
-
-interface SpendingPattern {
-  monthlyAverage: number;
-  thisMonth: number;
-  categories: {
-    name: string;
-    amount: number;
-    percentage: number;
-  }[];
-  trend: "up" | "down" | "stable";
-}
-
-interface GoalImpact {
-  monthlyAvailable: number;
-  currentAllocation: number;
-  recommendedAllocation: number;
-  projectedCompletion: string;
-  monthsAhead: number;
+interface PathwayStep {
+  id: string;
+  step: string;
+  description: string;
+  completed: boolean;
 }
 
 export default function Coaching() {
-  const { toast } = useToast();
-  const [recommendationApplied, setRecommendationApplied] = useState(false);
+  const [pathwaySteps, setPathwaySteps] = useState<PathwayStep[]>([
+    {
+      id: "1",
+      step: "This week: Review your eating out spending",
+      description: "Look at your last few restaurant and takeaway purchases. Which ones brought the most value to your family time together?",
+      completed: false,
+    },
+    {
+      id: "2",
+      step: "Next payday: Move £68 to your House Deposit",
+      description: "This is the amount you spent above your usual eating out average. Even £50 would make a difference.",
+      completed: false,
+    },
+    {
+      id: "3",
+      step: "By end of month: Plan one special meal at home",
+      description: "Cook something you'd normally order out. Many families find this creates better memories than restaurant visits.",
+      completed: false,
+    },
+    {
+      id: "4",
+      step: "Ongoing: Keep your grocery spending steady",
+      description: "You've maintained £420/month consistently for three months. That's excellent budgeting - don't change what's working.",
+      completed: false,
+    },
+  ]);
+
   const [goals] = useState<Goal[]>([
     {
       id: "1",
@@ -63,91 +62,16 @@ export default function Coaching() {
       currentAmount: 5500,
       targetDate: "Oct 2028",
     },
-    {
-      id: "2",
-      name: "Family Holiday",
-      targetAmount: 5000,
-      currentAmount: 2800,
-      targetDate: "Jul 2026",
-    },
   ]);
 
-  const incomePattern: IncomePattern = {
-    monthlyIncome: 2500,
-    lastThreeMonths: [2500, 2500, 2500],
-    trend: "stable",
-    nextExpected: {
-      amount: 2500,
-      date: "1 Oct 2025",
-    },
-  };
-
-  const spendingPattern: SpendingPattern = {
-    monthlyAverage: 1750,
-    thisMonth: 1817.90,
-    categories: [
-      { name: "Groceries", amount: 165.40, percentage: 9 },
-      { name: "Eating Out", amount: 152.50, percentage: 8 },
-      { name: "Entertainment", amount: 95.00, percentage: 5 },
-      { name: "Transport", amount: 130.00, percentage: 7 },
-      { name: "Shopping", amount: 275.00, percentage: 15 },
-      { name: "Bills & Utilities", amount: 500.00, percentage: 27 },
-      { name: "Other", amount: 500.00, percentage: 27 },
-    ],
-    trend: "up",
-  };
-
-  const calculateGoalImpact = (goal: Goal): GoalImpact => {
-    const monthlyAvailable = incomePattern.monthlyIncome - spendingPattern.thisMonth;
-    const remaining = goal.targetAmount - goal.currentAmount;
-    const currentAllocation = 500;
-    
-    const savingsOpportunity = spendingPattern.thisMonth - spendingPattern.monthlyAverage;
-    const recommendedAllocation = currentAllocation + Math.max(0, savingsOpportunity);
-    
-    const monthsToGoal = Math.ceil(remaining / recommendedAllocation);
-    const currentDate = new Date();
-    const projectedDate = new Date(currentDate.setMonth(currentDate.getMonth() + monthsToGoal));
-    
-    const targetDate = new Date(goal.targetDate);
-    const currentMonthsToTarget = Math.ceil((targetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24 * 30));
-    const monthsAhead = currentMonthsToTarget - monthsToGoal;
-    
-    return {
-      monthlyAvailable,
-      currentAllocation,
-      recommendedAllocation,
-      projectedCompletion: projectedDate.toLocaleDateString("en-GB", {
-        month: "short",
-        year: "numeric",
-      }),
-      monthsAhead,
-    };
-  };
-
   const primaryGoal = goals[0];
-  const goalImpact = calculateGoalImpact(primaryGoal);
-  const progressPercentage = (primaryGoal.currentAmount / primaryGoal.targetAmount) * 100;
 
-  const handleApplyRecommendation = () => {
-    setRecommendationApplied(true);
-    toast({
-      title: "Recommendation Applied Successfully",
-      description: `Your ${primaryGoal.name} allocation has been updated to ${formatCurrency(goalImpact.recommendedAllocation)}/month. You're now on track to reach your goal ${goalImpact.monthsAhead} months early.`,
-    });
-  };
-
-  const handleExploreMore = () => {
-    toast({
-      title: "Exploring More Options",
-      description: "Let's look at other ways to optimize your finances and reach your goals faster.",
-    });
-  };
-
-  const getTrendIcon = (trend: "up" | "down" | "stable") => {
-    if (trend === "up") return <TrendingUp className="w-4 h-4 text-chart-3" />;
-    if (trend === "down") return <TrendingDown className="w-4 h-4 text-destructive" />;
-    return <div className="w-4 h-4" />;
+  const toggleStep = (stepId: string) => {
+    setPathwaySteps(
+      pathwaySteps.map((step) =>
+        step.id === stepId ? { ...step, completed: !step.completed } : step
+      )
+    );
   };
 
   const formatCurrency = (amount: number) => {
@@ -160,251 +84,193 @@ export default function Coaching() {
   };
 
   return (
-    <div className="min-h-screen p-6 space-y-6">
+    <div className="min-h-screen p-6 space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-3xl font-heading font-bold mb-2">AI Financial Coach</h1>
+        <h1 className="text-3xl font-heading font-bold mb-2">Financial Coach</h1>
         <p className="text-muted-foreground">
-          Your personalized path to achieving your family goals
+          Your guide to achieving your family's financial goals
         </p>
       </div>
 
-      <Card className="bg-chart-3/5">
-        <CardHeader>
+      <Card className="bg-primary/5" data-testid="card-coach-greeting">
+        <CardContent className="pt-6">
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-chart-3/20">
-              <Sparkles className="w-6 h-6 text-chart-3" />
+            <div className="p-3 rounded-lg bg-primary/10">
+              <MessageCircle className="w-6 h-6 text-primary" />
             </div>
-            <div className="flex-1">
-              <CardTitle className="text-xl font-heading mb-2 flex items-center gap-2">
-                Great news, Alex & Sam! You're on track
-                <Target className="w-5 h-5 text-chart-3" />
-              </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Based on your income and spending patterns, you can reach your House Deposit goal{" "}
-                <span className="font-semibold text-foreground">
-                  {goalImpact.monthsAhead} months early
-                </span>{" "}
-                with a few small adjustments.
+            <div className="flex-1 space-y-3">
+              <p className="text-base leading-relaxed">
+                Hi Alex and Sam, I've been looking at your finances over the past few months, and I wanted to share what I'm seeing.
+              </p>
+              <p className="text-base leading-relaxed">
+                Your income has been beautifully steady at <span className="font-semibold">£2,500 per month</span> for the last three months. That consistency is your foundation - it means we can make realistic plans together.
               </p>
             </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card data-testid="card-income-pattern">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-chart-3" />
-              Income Pattern
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Monthly Income</span>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold">{formatCurrency(incomePattern.monthlyIncome)}</span>
-                {getTrendIcon(incomePattern.trend)}
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Last 3 Months Average</span>
-                <span className="font-medium">
-                  {formatCurrency(incomePattern.lastThreeMonths.reduce((a, b) => a + b, 0) / 3)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Trend</span>
-                <Badge variant="secondary" className="capitalize">
-                  {incomePattern.trend}
-                </Badge>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-lg bg-muted">
-              <div className="flex items-center gap-2 mb-1">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Next Expected</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{incomePattern.nextExpected.date}</span>
-                <span className="font-semibold">{formatCurrency(incomePattern.nextExpected.amount)}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="card-spending-pattern">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingDown className="w-5 h-5 text-chart-4" />
-              Spending Pattern
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">This Month</span>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold">{formatCurrency(spendingPattern.thisMonth)}</span>
-                {getTrendIcon(spendingPattern.trend)}
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Monthly Average</span>
-                <span className="font-medium">{formatCurrency(spendingPattern.monthlyAverage)}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Variance</span>
-                <Badge variant={spendingPattern.trend === "up" ? "destructive" : "secondary"}>
-                  +{formatCurrency(spendingPattern.thisMonth - spendingPattern.monthlyAverage)}
-                </Badge>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-xs text-muted-foreground mb-2">Top Categories</p>
-              {spendingPattern.categories.slice(0, 3).map((cat) => (
-                <div key={cat.name} className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span>{cat.name}</span>
-                      <span className="font-medium">{formatCurrency(cat.amount)}</span>
-                    </div>
-                    <Progress value={cat.percentage} className="h-1" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card data-testid="card-goal-impact">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
-            Goal: {primaryGoal.name}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Progress</span>
-              <span className="text-sm font-medium">
-                {formatCurrency(primaryGoal.currentAmount)} of {formatCurrency(primaryGoal.targetAmount)}
-              </span>
-            </div>
-            <Progress value={progressPercentage} className="h-3" />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="p-4 rounded-lg bg-muted">
-              <div className="text-sm text-muted-foreground mb-1">Monthly Available</div>
-              <div className="text-2xl font-bold text-chart-3">
-                {formatCurrency(goalImpact.monthlyAvailable)}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Income - Spending
-              </div>
-            </div>
-
-            <div className="p-4 rounded-lg bg-muted">
-              <div className="text-sm text-muted-foreground mb-1">
-                {recommendationApplied ? "New Allocation" : "Current Allocation"}
-              </div>
-              <div className="text-2xl font-bold">
-                {formatCurrency(recommendationApplied ? goalImpact.recommendedAllocation : goalImpact.currentAllocation)}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Per month to goal
-              </div>
-              {recommendationApplied && (
-                <Badge variant="default" className="mt-2">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Updated
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          <Card className="bg-primary/5">
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-3">
-                <PiggyBank className="w-5 h-5 text-primary mt-0.5" />
-                <div className="flex-1">
-                  <h4 className="font-semibold mb-2">AI Recommendation</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    You're spending <span className="font-semibold text-foreground">
-                      {formatCurrency(spendingPattern.thisMonth - spendingPattern.monthlyAverage)}
-                    </span> more than usual this month. By bringing spending back to your average, you could allocate{" "}
-                    <span className="font-semibold text-foreground">
-                      {formatCurrency(goalImpact.recommendedAllocation)}
-                    </span> per month to your House Deposit.
-                  </p>
-                  <div className="flex items-center gap-4 p-3 rounded-lg bg-background/50 border">
-                    <div className="flex-1">
-                      <div className="text-xs text-muted-foreground">New Completion Date</div>
-                      <div className="text-lg font-semibold">{goalImpact.projectedCompletion}</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                    <div className="text-right">
-                      <div className="text-xs text-muted-foreground">Current Target</div>
-                      <div className="text-lg font-semibold">{primaryGoal.targetDate}</div>
-                    </div>
-                  </div>
-                  <div className="mt-3 p-2 rounded bg-chart-3/10 text-sm text-center flex items-center justify-center gap-2">
-                    <span className="font-semibold text-chart-3">
-                      {goalImpact.monthsAhead} months ahead of schedule
-                    </span>
-                    <Target className="w-4 h-4 text-chart-3" />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex gap-3">
-            <Button 
-              className="flex-1" 
-              data-testid="button-apply-recommendation"
-              onClick={handleApplyRecommendation}
-              disabled={recommendationApplied}
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              {recommendationApplied ? "Recommendation Applied" : "Apply Recommendation"}
-            </Button>
-            <Button 
-              variant="outline" 
-              data-testid="button-explore-more"
-              onClick={handleExploreMore}
-            >
-              Explore More Options
-            </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Card data-testid="card-quick-actions">
+      <Card data-testid="card-coach-insight">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-lg bg-chart-3/10">
+              <Lightbulb className="w-6 h-6 text-chart-3" />
+            </div>
+            <div className="flex-1 space-y-3">
+              <p className="text-base leading-relaxed">
+                This month, you've spent <span className="font-semibold">£1,818</span> compared to your usual <span className="font-semibold">£1,750</span>. The difference? An extra <span className="font-semibold">£68 on eating out</span> - bringing that category to £280 instead of your typical £212.
+              </p>
+              <p className="text-base leading-relaxed">
+                Here's what caught my attention: your grocery spending has stayed rock-solid at £420 for three straight months. You're great at maintaining that budget. The eating out variance tells me you might have had some celebrations or busy weeks - that's completely normal for families.
+              </p>
+              <p className="text-base leading-relaxed text-muted-foreground italic">
+                Before we talk about your House Deposit goal, I'm curious: how did those extra restaurant meals feel? Were they worth it for your family?
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card data-testid="card-goal-connection">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-5 h-5 text-primary" />
+            Connecting This to Your {primaryGoal.name} Goal
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-3">
+            <p className="text-base leading-relaxed">
+              You're currently putting <span className="font-semibold">£500 per month</span> toward your house deposit. You've already saved <span className="font-semibold">{formatCurrency(primaryGoal.currentAmount)}</span> of your <span className="font-semibold">{formatCurrency(primaryGoal.targetAmount)}</span> target.
+            </p>
+            <p className="text-base leading-relaxed">
+              After your monthly bills and spending, you have about <span className="font-semibold">£682 available</span>. If you brought eating out back to your usual level, that £68 could go toward your deposit instead - making it <span className="font-semibold">£568 per month</span>.
+            </p>
+            
+            <div className="p-4 rounded-lg bg-chart-3/10 border border-chart-3/20">
+              <div className="flex items-start gap-3">
+                <TrendingUp className="w-5 h-5 text-chart-3 mt-0.5" />
+                <div className="space-y-2">
+                  <p className="font-semibold text-chart-3">What this could mean:</p>
+                  <p className="text-sm leading-relaxed">
+                    At £568/month, you'd reach your deposit goal by <span className="font-semibold">December 2027</span> instead of October 2028 - that's <span className="font-semibold">11 months earlier</span>. You'd be looking at houses nearly a year sooner.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t">
+            <p className="text-sm text-muted-foreground italic">
+              Of course, this isn't about being perfect every month. Life happens. But what feels doable for you?
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-muted/50" data-testid="card-pathway">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle>A Pathway to Consider</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Here's a step-by-step approach you could try. Mark each step as you complete it - this is just for your own tracking.
+              </p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button variant="outline" className="w-full justify-start" data-testid="button-action-budget-alert">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Set Budget Alert for Top Spending Categories
-          </Button>
-          <Button variant="outline" className="w-full justify-start" data-testid="button-action-auto-save">
-            <PiggyBank className="w-4 h-4 mr-2" />
-            Set Up Automatic Savings Transfer
-          </Button>
-          <Button variant="outline" className="w-full justify-start" data-testid="button-action-review-goals">
-            <Target className="w-4 h-4 mr-2" />
-            Review All Family Goals
-          </Button>
+          {pathwaySteps.map((step) => (
+            <div
+              key={step.id}
+              className="flex items-start gap-3 p-4 rounded-lg bg-background border hover-elevate"
+              data-testid={`pathway-step-${step.id}`}
+            >
+              <Checkbox
+                id={step.id}
+                checked={step.completed}
+                onCheckedChange={() => toggleStep(step.id)}
+                className="mt-1"
+                data-testid={`checkbox-step-${step.id}`}
+              />
+              <div className="flex-1">
+                <label
+                  htmlFor={step.id}
+                  className={`font-medium cursor-pointer block mb-1 ${
+                    step.completed ? "line-through text-muted-foreground" : ""
+                  }`}
+                >
+                  {step.step}
+                </label>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card data-testid="card-alternative-path">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-muted-foreground" />
+            Not Sure About This Path?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-base leading-relaxed">
+            There are always other ways to approach your goals. Here are some alternatives worth considering:
+          </p>
+          <div className="space-y-2">
+            <div className="p-3 rounded-lg bg-muted">
+              <p className="font-medium mb-1">Keep eating out steady, optimize elsewhere</p>
+              <p className="text-sm text-muted-foreground">
+                If those meals are important family time, look at your £275 shopping category or £95 entertainment spending instead.
+              </p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted">
+              <p className="font-medium mb-1">Smaller adjustment, longer timeline</p>
+              <p className="text-sm text-muted-foreground">
+                Even cutting eating out by £30 (not the full £68) would get you to your goal 5 months earlier - that's still meaningful progress.
+              </p>
+            </div>
+            <div className="p-3 rounded-lg bg-muted">
+              <p className="font-medium mb-1">Income opportunity focus</p>
+              <p className="text-sm text-muted-foreground">
+                Your steady income is great, but have you explored freelance work, salary negotiation, or side projects that could add even £100/month?
+              </p>
+            </div>
+          </div>
+          <div className="pt-3 border-t">
+            <p className="text-sm text-muted-foreground italic">
+              The best financial plan is one you'll actually stick to. What resonates most with how your family wants to live?
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-primary/5">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-lg bg-primary/10">
+              <MessageCircle className="w-6 h-6 text-primary" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-base leading-relaxed">
+                Remember: this isn't about cutting back on joy. It's about making sure every pound you spend or save is moving you toward the life you want.
+              </p>
+              <p className="text-base leading-relaxed">
+                Your groceries show you can budget when it matters. Your steady income gives you options. You're in a strong position - we're just fine-tuning.
+              </p>
+              <Badge variant="secondary" className="mt-2">
+                Next review: When you get your October payday
+              </Badge>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
