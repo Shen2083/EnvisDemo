@@ -52,6 +52,22 @@ export default function Goals() {
       targetDate: "Jul 2026",
       linkedAccounts: ["joint"],
     },
+    {
+      id: "3",
+      name: "Emergency Fund",
+      targetAmount: 9000,
+      currentAmount: 2400,
+      targetDate: "Dec 2026",
+      linkedAccounts: ["joint", "savings"],
+    },
+    {
+      id: "4",
+      name: "Kids Education Fund",
+      targetAmount: 15000,
+      currentAmount: 3200,
+      targetDate: "Sep 2030",
+      linkedAccounts: ["personal", "savings"],
+    },
   ]);
 
   const handleCreateGoal = (goalData: {
