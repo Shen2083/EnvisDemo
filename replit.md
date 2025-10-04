@@ -12,6 +12,32 @@ The demo covers six key experiences:
 - Smart Insights with proactive recommendations
 - Account Management for connected bank accounts
 
+## Recent Changes (October 2025)
+
+### Financial Coach Redesign
+Redesigned the Financial Coach page to provide a more interactive, goal-focused coaching experience:
+
+**Two-Column Interactive Layout**:
+- **Left Column (3fr)**: Goal accordion cards showing progress summaries. When expanded, reveals detailed pathway steps with checkboxes.
+- **Right Column (2fr)**: Conversational chat interface for meaningful dialogue about recommendations.
+
+**Goal-Specific Quick Replies**:
+- Persistent quick reply buttons that remain visible when a goal is active
+- Different suggested questions per goal:
+  - **House Deposit**: "Why eating out?", "Timeline details?", "Alternatives?"
+  - **Family Holiday**: "Timeline?", "Booking tips?", "Increase savings?"
+- Quick replies trigger contextual coach responses based on active goal
+
+**Wizard-of-Oz Chat System**:
+- Keyword-based response matching for intelligent, goal-aware conversations
+- Context messages when goals are expanded
+- Smooth chat flow with user messages (primary color) and coach messages (muted)
+
+**Technical Implementation**:
+- Fixed async state issue: Quick replies pass messages directly to avoid stale React state
+- Conditional rendering of goal-specific quick replies based on `activeGoalId`
+- Chat history maintains conversation flow across goal switches
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
