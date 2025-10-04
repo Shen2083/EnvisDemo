@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +17,8 @@ import {
   MessageCircle,
   TrendingUp,
   CheckCircle2,
+  AlertCircle,
+  Lightbulb,
 } from "lucide-react";
 
 interface Goal {
@@ -26,6 +29,7 @@ interface Goal {
   targetDate: string;
   insight: string;
   pathwaySteps: PathwayStep[];
+  relatedInsights?: string[];
 }
 
 interface PathwayStep {
@@ -51,6 +55,7 @@ export default function Coaching() {
       currentAmount: 5500,
       targetDate: "Oct 2028",
       insight: "You could reach this 11 months early by optimizing eating out spending",
+      relatedInsights: ["Unusual spending detected on eating out"],
       pathwaySteps: [
         {
           id: "1",
@@ -107,6 +112,7 @@ export default function Coaching() {
       currentAmount: 2400,
       targetDate: "Dec 2026",
       insight: "Critical: Recent low balance alert shows why this fund is essential - you need £700 buffer",
+      relatedInsights: ["Low balance cashflow alert", "Subscription consolidation opportunity"],
       pathwaySteps: [
         {
           id: "1",
@@ -335,7 +341,19 @@ export default function Coaching() {
                         </div>
                         <div className="flex-1 space-y-3">
                           <div>
-                            <CardTitle className="text-lg mb-1">{goal.name}</CardTitle>
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <CardTitle className="text-lg">{goal.name}</CardTitle>
+                              {goal.relatedInsights && goal.relatedInsights.length > 0 && (
+                                <Badge 
+                                  variant="secondary" 
+                                  className="text-xs gap-1"
+                                  data-testid={`insight-badge-${goal.id}`}
+                                >
+                                  <Lightbulb className="w-3 h-3" />
+                                  {goal.relatedInsights.length} insight{goal.relatedInsights.length > 1 ? 's' : ''}
+                                </Badge>
+                              )}
+                            </div>
                             <p className="text-sm text-muted-foreground">{goal.insight}</p>
                           </div>
                           <div className="space-y-1">
@@ -353,6 +371,21 @@ export default function Coaching() {
                     <AccordionContent>
                       <CardContent className="pt-4">
                         <div className="space-y-4">
+                          {goal.relatedInsights && goal.relatedInsights.length > 0 && (
+                            <div className="p-3 rounded-lg bg-chart-3/10 border border-chart-3/20">
+                              <div className="flex items-start gap-2 mb-2">
+                                <Lightbulb className="w-4 h-4 text-chart-3 mt-0.5" />
+                                <p className="font-semibold text-chart-3 text-sm">Connected Insights</p>
+                              </div>
+                              <ul className="space-y-1 ml-6">
+                                {goal.relatedInsights.map((insight, idx) => (
+                                  <li key={idx} className="text-sm text-muted-foreground list-disc">
+                                    {insight}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                           <div className="flex items-start gap-2 mb-4">
                             <TrendingUp className="w-5 h-5 text-chart-3 mt-0.5" />
                             <div>
