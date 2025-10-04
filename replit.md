@@ -2,251 +2,88 @@
 
 ## Overview
 
-Envis is your family's financial partner—an intelligent financial coach that proactively coordinates goals, prevents financial stress, and builds collective wealth. This is a high-fidelity interactive demo built to showcase core product features to stakeholders using a "Wizard of Oz" methodology—the front-end experience is fully functional and polished, while the back-end uses mock data and simulated responses rather than production AI systems.
+Envis is an intelligent financial coach for families, designed to coordinate financial goals, prevent stress, and build collective wealth. This interactive demo showcases core product features to stakeholders, utilizing a "Wizard of Oz" methodology where the front-end is fully functional and polished, backed by mock data and simulated responses.
 
-The demo guides users through six key experiences:
-1. **Onboarding & Account Linking** - Secure bank account connection via Open Banking
-2. **Dashboard View** - Unified family financial overview with transaction feeds across all accounts
-3. **AI Financial Coach** - Personalized coaching connecting income patterns, spending habits, and goal achievement
-4. **Goal Management** - Create, edit, and delete shared family financial goals with progress tracking
-5. **Smart Insights** - Proactive financial recommendations with detailed review screens and actionable next steps
-6. **Account Management** - View, refresh, add, and remove connected bank accounts
-
-## Recent Updates
-
-**October 4, 2025 - AI Financial Coach**
-- **AI Coaching Page** (/coaching): Comprehensive financial coaching showing the complete picture
-  - **Income Pattern Analysis**: Monthly income trends, last 3 months average, next expected income date
-  - **Spending Pattern Analysis**: This month vs average spending, variance tracking, top spending categories with visual breakdowns
-  - **Goal Impact Calculator**: Shows how income and spending patterns directly affect goal achievement
-    - Monthly available funds calculation (income - spending)
-    - Current vs recommended allocation amounts
-    - Projected completion date based on spending optimization
-    - "Months ahead/behind schedule" metric for motivation
-  - **AI Recommendations**: Personalized, encouraging suggestions with one-click actions
-    - Analyzes spending variance and suggests reallocation
-    - Shows exact impact on goal timeline
-    - Interactive "Apply Recommendation" with state updates and confirmations
-  - **Quick Actions**: Budget alerts, automatic savings setup, goal reviews
-  - **Wholesome Financial Picture**: Visual flow showing Income → Spending → Available Funds → Goal Achievement
-  - **Encouraging Tone**: Non-judgmental, action-oriented coaching that celebrates progress
-
-**October 3, 2025 - Multi-Family Member Support**
-- **Family Members Management** (/family): Complete family member invitation and management system
-  - Invite family members via email with pending invitation tracking
-  - Remove members with confirmation dialogs (admins cannot be removed)
-  - Cancel pending invitations
-  - Email validation and duplicate detection (already member, already invited)
-  - Toast notifications for all actions
-- **Account Ownership Tracking**: Transactions now show account owner information
-  - Added "Owner" column to transaction tables showing account owner name
-  - Joint accounts display "(Joint)" indicator
-  - Individual accounts show specific owner name (e.g., "Alex", "Sam")
-- **Ownership Filter**: New dropdown to filter transactions by account type
-  - "All Accounts" - Shows all transactions (default)
-  - "Individual Only" - Shows only individually-owned account transactions
-  - "Joint Only" - Shows only joint account transactions
-- **Data Model Updates**: Enhanced schema to support multi-family member workflows
-  - families table: Container for family groups
-  - familyMembers: Users in family with roles (admin/member) and status
-  - familyInvites: Email-based invitations with tokens and expiry
-  - accountOwners: Junction table supporting multiple owners per account
-  - connectedAccounts: Updated with externalAccountId for duplicate detection
-- **Mock Data**: Updated with ownership information across all transactions
-  - Joint accounts: "Alex & Sam" with ownershipType: "joint"
-  - Individual accounts: Specific owners (Alex or Sam) with ownershipType: "individual"
-
-**October 3, 2025 - Earlier Updates**
-- Redesigned Dashboard with transaction grouping by category
-- Added accordion-based category view with expandable transaction tables
-- Implemented transaction selection and bulk move functionality between categories
-- Category-level insights now display in side panel (Sheet component) instead of full page
-- Real-time category totals update after transactions are moved
-- Amount formatting: Income shows positive (+£2500) in green, spending negative (-£165.40)
-- Fixed "View Insights" button alignment using CSS Grid layout for consistent column positioning
-- Added custom category creation feature - users can now create new categories via dialog form
-- Implemented duplicate category name handling with automatic ID suffix generation
-- Added intelligent savings opportunity projections showing index fund (8% return) and savings account (4.5% interest) growth
-  - Detects spending increases: shows projections for excess spending above baseline (e.g., Eating Out £40 above average)
-  - Detects explicit opportunities: consolidating subscriptions, switching services (e.g., Entertainment with 3 streaming services)
-  - Displays contextual messaging: "Monthly Excess" for overspending, "Monthly Savings" for identified opportunities
-  - Shows: Monthly amount, Yearly Total, Index Fund (8%), Savings Account (4.5%)
-- Added timeline filter for transactions with 7 options: current month, previous month, current + previous, last 3/6 months, year to date, last 2 years
-  - Default changed to "Current + Previous Month" for better demo data visibility
-- Implemented polished loading transition with animated progress indicators when moving from account linking to dashboard
-
-**October 2, 2025**
-- Updated messaging to match envis.money brand (focus on problems solved vs. AI features)
-- Added full CRUD for Goals: create, edit, delete with confirmation dialogs
-- Created Insight Detail view with data breakdowns and actionable recommendations
-- Built Connected Accounts page with refresh, add, and remove functionality
-- All interactive elements include proper test IDs for end-to-end testing
+The demo covers six key experiences:
+- Onboarding & Account Linking
+- Dashboard View with unified family finances
+- AI Financial Coach providing personalized guidance
+- Goal Management for shared family goals
+- Smart Insights with proactive recommendations
+- Account Management for connected bank accounts
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
 
-## Key Features Implemented
-
-### 1. AI Financial Coach (/coaching)
-- **Income Pattern Analysis**: Shows monthly income (£2,500), trends, and next expected income
-- **Spending Pattern Visualization**: Displays current spending vs average with top categories
-- **Goal Impact Calculator**: Calculates how income-spending affects goal achievement timeline
-- **AI Recommendations**: Personalized suggestions showing exact impact on goals
-  - Analyzes spending variance (e.g., £68 above average this month)
-  - Suggests optimal allocation (e.g., £568/month to House Deposit)
-  - Projects new completion date (e.g., 11 months ahead of schedule)
-- **Interactive Actions**: One-click "Apply Recommendation" with visual feedback
-  - Updates allocation amounts dynamically
-  - Shows success indicators and confirmation toasts
-  - Provides quick access to budget alerts and auto-save setup
-- **Wholesome Financial Picture**: Complete view connecting income → spending → goals
-- **Encouraging Coaching Tone**: Celebrates progress, frames challenges as opportunities
-
-### 2. Family Members Management (/family)
-- Invite family members via email with validation
-- View active members with roles (admin/member) and linked account counts
-- Remove family members with confirmation (admins protected)
-- Track pending invitations with expiry information
-- Cancel pending invitations
-- Duplicate detection: prevents re-inviting existing members or pending invites
-- Toast notifications for all actions (invite sent, member removed, etc.)
-
-### 3. Account Management (/accounts)
-- View all connected bank accounts with balances, statuses, and sync times
-- Refresh account connections with loading states
-- Add new accounts via Open Banking flow
-- Remove accounts with confirmation dialogs
-- Status indicators: Connected, Needs Refresh, Connection Error
-- Account ownership tracking (individual vs joint accounts)
-
-### 4. Goal Management (/goals)
-- Create new family savings goals with target amounts and dates
-- Edit existing goals with pre-filled forms
-- Delete goals with confirmation
-- Automatic monthly contribution calculator
-- Progress tracking with visual indicators
-
-### 5. Smart Insights (/insights)
-- Four insight types: cashflow, subscriptions, spending, goal progress
-- Click any insight for detailed review screen
-- Data breakdowns with specific recommendations
-- "Take Action" and "Dismiss" functionality
-- Color-coded by insight type
-
-### 6. Dashboard (/dashboard)
-- Unified balance summary across all family accounts
-- Transaction grouping by category with accordion view
-- Expandable categories showing transaction tables with selection checkboxes
-- **Account ownership display**: Each transaction shows owner name and joint/individual indicator
-- **Ownership filter**: Filter transactions by "All Accounts", "Individual Only", or "Joint Only"
-- Bulk transaction actions: select and move transactions between categories
-- Create custom categories with dialog form (automatically handles duplicate names)
-- Category-level insights accessible via side panel (Sheet component)
-- Real-time category totals with month-over-month comparisons
-- Timeline filter: View transactions by current month, previous month, current + previous, last 3/6 months, year to date, or last 2 years
-- Search functionality across all transactions
-- Amount formatting with proper signs: Income positive (+£2500) in green, spending negative (-£165.40)
-- Grid-based layout ensures consistent alignment of View Insights buttons and amounts
-
 ## System Architecture
 
 ### Frontend Architecture
 
-**Framework**: React 18 with TypeScript, using Vite as the build tool and development server.
-
-**Routing**: Wouter for client-side routing—a lightweight alternative to React Router suitable for single-page applications.
-
-**UI Component System**: Radix UI primitives with shadcn/ui styling patterns. The design follows a hybrid approach combining modern fintech aesthetics (inspired by Monzo, Starling, Revolut) with Material Design principles for trust and consistency.
-
+**Framework**: React 18 with TypeScript and Vite.
+**Routing**: Wouter for client-side routing.
+**UI Component System**: Radix UI primitives with shadcn/ui styling, blending fintech aesthetics (Monzo, Starling, Revolut) with Material Design.
 **Design System**:
-- **Typography**: Inter (UI) and Plus Jakarta Sans (headings) for a balance of professionalism and approachability
-- **Color Palette**: Deep trust blue primary (220 85% 25%), with success/warning/error colors for financial feedback
-- **Theme Support**: Light and dark modes with CSS custom properties and Tailwind CSS
-- **Component Patterns**: Hover and active elevation states, consistent border radius, tabular number formatting for financial data
-
-**State Management**: React Query (@tanstack/react-query) for server state management and caching. Local component state managed with React hooks.
-
-**Form Handling**: React Hook Form with Zod schema validation via @hookform/resolvers.
-
-**Styling**: Tailwind CSS with custom design tokens defined in CSS variables. The configuration uses HSL color space for dynamic theming.
+- **Typography**: Inter (UI) and Plus Jakarta Sans (headings).
+- **Color Palette**: Deep trust blue primary with financial feedback colors.
+- **Theme Support**: Light and dark modes using CSS custom properties and Tailwind CSS.
+- **Component Patterns**: Consistent hover/active states, border radius, tabular number formatting.
+**State Management**: React Query for server state, React hooks for local state.
+**Form Handling**: React Hook Form with Zod validation.
+**Styling**: Tailwind CSS with custom design tokens.
 
 ### Backend Architecture
 
-**Server Framework**: Express.js running on Node.js.
-
-**Development Strategy**: Currently implements a "Wizard of Oz" approach where the UI is fully functional but backend services use mock data stored in-memory rather than live AI processing or real financial data aggregation.
-
-**Storage Interface**: Abstract storage layer (`IStorage`) with in-memory implementation (`MemStorage`). This allows easy transition to persistent database storage without changing application logic.
-
-**API Structure**: RESTful endpoints prefixed with `/api`. The routes module (`server/routes.ts`) is prepared for expansion but currently minimal as demo uses client-side mock data.
-
-**Session Management**: Infrastructure includes connect-pg-simple for PostgreSQL-backed sessions (not yet fully implemented in demo).
-
-**Build Process**: 
-- Frontend: Vite builds optimized production bundle
-- Backend: esbuild bundles server code for deployment
-- Separate dev and production modes with hot module reloading in development
+**Server Framework**: Express.js on Node.js.
+**Development Strategy**: "Wizard of Oz" approach using in-memory mock data instead of live AI or real financial data.
+**Storage Interface**: Abstract `IStorage` with `MemStorage` for easy transition to persistent storage.
+**API Structure**: RESTful endpoints prefixed with `/api`.
+**Build Process**: Vite for frontend, esbuild for backend.
 
 ### Data Storage
 
-**Database**: PostgreSQL via Neon serverless (@neondatabase/serverless) for production readiness, though demo currently uses in-memory storage.
-
-**ORM**: Drizzle ORM with TypeScript-first schema definition. Schema includes user authentication foundation with extensibility for financial data models.
-
-**Schema Management**: Drizzle Kit for migrations and schema synchronization. Schema defined in `shared/schema.ts` for type sharing between client and server.
-
-**Type Safety**: Zod schemas generated from Drizzle schemas (drizzle-zod) ensure runtime validation matches compile-time types.
+**Database**: PostgreSQL via Neon serverless (for production readiness); demo uses in-memory storage.
+**ORM**: Drizzle ORM with TypeScript-first schema.
+**Schema Management**: Drizzle Kit for migrations.
+**Type Safety**: Zod schemas generated from Drizzle schemas.
 
 ### Authentication & Authorization
 
-**Current Implementation**: Basic user schema with username/password fields. Demo includes signup/login UI flows but authentication is not yet enforced.
-
-**Planned Approach**: Session-based authentication using Express sessions backed by PostgreSQL. User credentials will be hashed (infrastructure ready but not implemented in demo).
-
-**Security Considerations**: Prepared for FCA-regulated Open Banking integration with secure credential handling and consent management.
+**Current Implementation**: Basic user schema with signup/login UI flows; authentication not yet enforced.
+**Planned Approach**: Session-based authentication using Express sessions backed by PostgreSQL.
 
 ## External Dependencies
 
 ### UI Component Library
-- **Radix UI**: Unstyled, accessible component primitives (@radix-ui/react-*)
-- **shadcn/ui**: Design system built on Radix with Tailwind styling
-- **lucide-react**: Icon library for consistent iconography
-- **cmdk**: Command menu component for search/navigation
+- **Radix UI**: Unstyled, accessible component primitives.
+- **shadcn/ui**: Design system built on Radix with Tailwind styling.
+- **lucide-react**: Icon library.
+- **cmdk**: Command menu component.
 
 ### Data Fetching & State
-- **TanStack React Query**: Server state management, caching, and synchronization
-- **date-fns**: Date manipulation and formatting for financial data
+- **TanStack React Query**: Server state management.
+- **date-fns**: Date manipulation and formatting.
 
 ### Forms & Validation
-- **React Hook Form**: Form state management with performance optimization
-- **Zod**: Schema validation for forms and API data
-- **@hookform/resolvers**: Bridge between React Hook Form and Zod
+- **React Hook Form**: Form state management.
+- **Zod**: Schema validation.
+- **@hookform/resolvers**: Bridge between React Hook Form and Zod.
 
 ### Styling
-- **Tailwind CSS**: Utility-first CSS framework
-- **class-variance-authority**: Type-safe variant management for components
-- **tailwindcss-animate**: Animation utilities
+- **Tailwind CSS**: Utility-first CSS framework.
+- **class-variance-authority**: Type-safe variant management.
+- **tailwindcss-animate**: Animation utilities.
 
 ### Database & Backend
-- **Neon Serverless PostgreSQL**: Cloud-native PostgreSQL (@neondatabase/serverless)
-- **Drizzle ORM**: TypeScript ORM with full type inference
-- **connect-pg-simple**: PostgreSQL session store for Express
+- **Neon Serverless PostgreSQL**: Cloud-native PostgreSQL.
+- **Drizzle ORM**: TypeScript ORM.
+- **connect-pg-simple**: PostgreSQL session store for Express.
 
 ### Open Banking Integration (Planned)
-The demo is designed to integrate with Open Banking API providers (Plaid or TrueLayer sandbox) for:
-- Secure bank account connection
-- Transaction data retrieval
-- Real-time balance updates
-- Multi-institution aggregation
-
-**Note**: Current demo simulates this with static mock data and UI flows. Production implementation will use actual Open Banking APIs with proper FCA compliance.
+The demo is designed to integrate with Open Banking API providers (Plaid or TrueLayer sandbox) for secure bank account connection, transaction data retrieval, and real-time balance updates. The current demo simulates this with static mock data.
 
 ### Development Tools
-- **Vite**: Fast development server and build tool
-- **esbuild**: JavaScript bundler for server code
-- **TypeScript**: Type safety across full stack
-- **@replit/vite-plugin-***: Replit-specific development enhancements (error overlay, cartographer, dev banner)
-
-### Asset Management
-Images stored in `attached_assets/` directory, including generated UI mockups and design references accessed via `@assets` path alias.
+- **Vite**: Fast development server and build tool.
+- **esbuild**: JavaScript bundler for server code.
+- **TypeScript**: Type safety.
+- **@replit/vite-plugin-***: Replit-specific development enhancements.
