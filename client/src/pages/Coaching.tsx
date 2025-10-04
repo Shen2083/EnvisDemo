@@ -100,6 +100,68 @@ export default function Coaching() {
         },
       ],
     },
+    {
+      id: "emergency-fund",
+      name: "Emergency Fund",
+      targetAmount: 9000,
+      currentAmount: 2400,
+      targetDate: "Dec 2026",
+      insight: "Critical: Recent low balance alert shows why this fund is essential - you need £700 buffer",
+      pathwaySteps: [
+        {
+          id: "1",
+          step: "Urgent: Move £700 from savings to cover mortgage",
+          description: "Your mortgage payment is due in 3 days and your balance is £700 short.",
+          completed: false,
+        },
+        {
+          id: "2",
+          step: "This month: Set up automatic £300/month transfer",
+          description: "Build your emergency fund to prevent future cashflow issues.",
+          completed: false,
+        },
+        {
+          id: "3",
+          step: "Review: Check your streaming subscriptions",
+          description: "The £35/month from consolidating Netflix, Disney+, and Prime could go here.",
+          completed: false,
+        },
+        {
+          id: "4",
+          step: "Goal: Reach 3 months of expenses",
+          description: "£9,000 covers your essential costs and prevents stress from unexpected bills.",
+          completed: false,
+        },
+      ],
+    },
+    {
+      id: "kids-education",
+      name: "Kids Education Fund",
+      targetAmount: 15000,
+      currentAmount: 3200,
+      targetDate: "Sep 2030",
+      insight: "Starting early gives you compound growth - you're ahead by beginning now",
+      pathwaySteps: [
+        {
+          id: "1",
+          step: "This month: Continue £150/month contribution",
+          description: "Your current pace puts you on track for the 2030 target.",
+          completed: false,
+        },
+        {
+          id: "2",
+          step: "Consider: Junior ISA for tax-free growth",
+          description: "Could boost your savings by £200-300/year through tax-free returns.",
+          completed: false,
+        },
+        {
+          id: "3",
+          step: "Future: Increase by 5% annually",
+          description: "As your income grows, gradually increase contributions to match inflation.",
+          completed: false,
+        },
+      ],
+    },
   ]);
 
   const [activeGoalId, setActiveGoalId] = useState<string | null>(null);
@@ -180,12 +242,37 @@ export default function Coaching() {
       "contributions": "You're already on track to reach this £5,000 goal 3 months early! But if you wanted to accelerate even more, adding just £50/month to your current £200 would mean you could book 5 months sooner. That might give you better choices for accommodation and timing.",
     };
 
+    const emergencyResponses: Record<string, string> = {
+      "cashflow": "This connects directly to your recent low balance alert! Your mortgage payment is due in 3 days, but your balance is £700 short. An emergency fund would prevent this stress - that's exactly why this goal is critical.",
+      "alert": "This connects directly to your recent low balance alert! Your mortgage payment is due in 3 days, but your balance is £700 short. An emergency fund would prevent this stress - that's exactly why this goal is critical.",
+      "subscription": "Great connection! The £35/month you'd save by consolidating your streaming services (Netflix, Disney+, Prime) could go straight into building this fund. In just 6 months, that's £210 of your emergency buffer sorted.",
+      "streaming": "Great connection! The £35/month you'd save by consolidating your streaming services (Netflix, Disney+, Prime) could go straight into building this fund. In just 6 months, that's £210 of your emergency buffer sorted.",
+      "how": "Start with the urgent £700 transfer to cover your mortgage, then set up automatic £300/month contributions. The insights show you can find £35/month from subscriptions - every bit helps build your safety net.",
+      "build": "Start with the urgent £700 transfer to cover your mortgage, then set up automatic £300/month contributions. The insights show you can find £35/month from subscriptions - every bit helps build your safety net.",
+    };
+
+    const educationResponses: Record<string, string> = {
+      "timeline": "You're on track! At £150/month, you'll reach £15,000 by September 2030 when it's needed. The earlier you start, the more compound growth helps - you're already ahead by beginning now.",
+      "junior": "A Junior ISA could boost your returns by £200-300/year through tax-free growth. You can contribute up to £9,000/year, and your current £150/month (£1,800/year) fits well within that limit.",
+      "isa": "A Junior ISA could boost your returns by £200-300/year through tax-free growth. You can contribute up to £9,000/year, and your current £150/month (£1,800/year) fits well within that limit.",
+      "increase": "Smart thinking! As your income grows, try increasing contributions by 5% annually to stay ahead of inflation. Even small increases compound significantly over 6 years.",
+      "grow": "Smart thinking! As your income grows, try increasing contributions by 5% annually to stay ahead of inflation. Even small increases compound significantly over 6 years.",
+    };
+
     if (goalId === "house-deposit") {
       for (const [keyword, response] of Object.entries(houseDepositResponses)) {
         if (input.includes(keyword)) return response;
       }
     } else if (goalId === "family-holiday") {
       for (const [keyword, response] of Object.entries(holidayResponses)) {
+        if (input.includes(keyword)) return response;
+      }
+    } else if (goalId === "emergency-fund") {
+      for (const [keyword, response] of Object.entries(emergencyResponses)) {
+        if (input.includes(keyword)) return response;
+      }
+    } else if (goalId === "kids-education") {
+      for (const [keyword, response] of Object.entries(educationResponses)) {
         if (input.includes(keyword)) return response;
       }
     }
@@ -400,6 +487,62 @@ export default function Coaching() {
                         data-testid="quick-reply-contributions"
                       >
                         Increase savings?
+                      </Button>
+                    </>
+                  )}
+                  {activeGoalId === "emergency-fund" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("How does this connect to the cashflow alert?")}
+                        data-testid="quick-reply-cashflow"
+                      >
+                        Cashflow alert?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Can I use the subscription savings?")}
+                        data-testid="quick-reply-subscriptions"
+                      >
+                        Use subscription savings?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("How should I build this?")}
+                        data-testid="quick-reply-build"
+                      >
+                        How to build?
+                      </Button>
+                    </>
+                  )}
+                  {activeGoalId === "kids-education" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("What about the timeline?")}
+                        data-testid="quick-reply-education-timeline"
+                      >
+                        Timeline?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Tell me about Junior ISA")}
+                        data-testid="quick-reply-junior-isa"
+                      >
+                        Junior ISA?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Should I increase over time?")}
+                        data-testid="quick-reply-increase"
+                      >
+                        Increase contributions?
                       </Button>
                     </>
                   )}
