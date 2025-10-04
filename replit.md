@@ -14,29 +14,49 @@ The demo covers six key experiences:
 
 ## Recent Changes (October 2025)
 
-### Financial Coach Redesign
-Redesigned the Financial Coach page to provide a more interactive, goal-focused coaching experience:
+### Financial Coach Redesign with Smart Insights Integration
+Redesigned the Financial Coach page to provide a more interactive, goal-focused coaching experience with intelligent connections to insights:
 
 **Two-Column Interactive Layout**:
 - **Left Column (3fr)**: Goal accordion cards showing progress summaries. When expanded, reveals detailed pathway steps with checkboxes.
 - **Right Column (2fr)**: Conversational chat interface for meaningful dialogue about recommendations.
+
+**Four Family Financial Goals**:
+- **House Deposit**: £20,000 target - accelerate by optimizing eating out spending
+- **Family Holiday**: £5,000 target - on track 3 months ahead of schedule
+- **Emergency Fund**: £9,000 target - critical safety net to prevent cashflow issues
+- **Kids Education Fund**: £15,000 target - long-term savings with compound growth
+
+**Smart Connections Between Insights and Goals**:
+- Visual indicators show which goals have related insights (lightbulb badge with count)
+- "Connected Insights" section appears when goals are expanded
+- Goals explicitly link to relevant insights:
+  - House Deposit → Eating out spending alert
+  - Emergency Fund → Cashflow alert + Subscription consolidation
+- Coach responses reference specific insights with exact numbers (£700 shortage, £35/month savings)
+- Insights page updated to reference goals, creating bidirectional connections
 
 **Goal-Specific Quick Replies**:
 - Persistent quick reply buttons that remain visible when a goal is active
 - Different suggested questions per goal:
   - **House Deposit**: "Why eating out?", "Timeline details?", "Alternatives?"
   - **Family Holiday**: "Timeline?", "Booking tips?", "Increase savings?"
+  - **Emergency Fund**: "Cashflow alert?", "Use subscription savings?", "How to build?"
+  - **Kids Education**: "Timeline?", "Junior ISA?", "Increase contributions?"
 - Quick replies trigger contextual coach responses based on active goal
 
 **Wizard-of-Oz Chat System**:
 - Keyword-based response matching for intelligent, goal-aware conversations
 - Context messages when goals are expanded
 - Smooth chat flow with user messages (primary color) and coach messages (muted)
+- Responses echo specific insight details to reinforce connections
 
 **Technical Implementation**:
 - Fixed async state issue: Quick replies pass messages directly to avoid stale React state
 - Conditional rendering of goal-specific quick replies based on `activeGoalId`
 - Chat history maintains conversation flow across goal switches
+- Goals have `relatedInsights` field for smart linking
+- Visual indicators use Badge component with Lightbulb icon
 
 ## User Preferences
 
