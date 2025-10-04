@@ -35,6 +35,11 @@ Redesigned the Financial Coach page to provide a more interactive, goal-focused 
   - Emergency Fund → Cashflow alert + Subscription consolidation
 - Coach responses reference specific insights with exact numbers (£700 shortage, £35/month savings)
 - Insights page updated to reference goals, creating bidirectional connections
+- Dashboard balance summary shows accurate counts: 4 active goals, 6 insights
+- Dashboard category insights reference related goals:
+  - Eating Out insight mentions "House Deposit goal by 11 months"
+  - Entertainment insight mentions "Emergency Fund" and "£35/month savings"
+- "Connected Goal" metric added to category insight side panel
 
 **Goal-Specific Quick Replies**:
 - Persistent quick reply buttons that remain visible when a goal is active
