@@ -7,7 +7,7 @@ Envis is an intelligent financial coach for families, designed to coordinate fin
 The demo covers six key experiences:
 - Onboarding & Account Linking
 - Dashboard View with unified family finances
-- AI Financial Coach providing personalized guidance
+- Financial Coach providing conversational, intelligent guidance
 - Goal Management for shared family goals
 - Smart Insights with proactive recommendations
 - Account Management for connected bank accounts
