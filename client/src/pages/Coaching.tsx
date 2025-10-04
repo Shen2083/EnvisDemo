@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Target,
+  Send,
   MessageCircle,
   TrendingUp,
-  Calendar,
-  Target,
   CheckCircle2,
-  Lightbulb,
 } from "lucide-react";
 
 interface Goal {
@@ -17,6 +24,8 @@ interface Goal {
   targetAmount: number;
   currentAmount: number;
   targetDate: string;
+  insight: string;
+  pathwaySteps: PathwayStep[];
 }
 
 interface PathwayStep {
@@ -26,53 +35,83 @@ interface PathwayStep {
   completed: boolean;
 }
 
-export default function Coaching() {
-  const [pathwaySteps, setPathwaySteps] = useState<PathwayStep[]>([
-    {
-      id: "1",
-      step: "This week: Review your eating out spending",
-      description: "Look at your last few restaurant and takeaway purchases. Which ones brought the most value to your family time together?",
-      completed: false,
-    },
-    {
-      id: "2",
-      step: "Next payday: Move £68 to your House Deposit",
-      description: "This is the amount you spent above your usual eating out average. Even £50 would make a difference.",
-      completed: false,
-    },
-    {
-      id: "3",
-      step: "By end of month: Plan one special meal at home",
-      description: "Cook something you'd normally order out. Many families find this creates better memories than restaurant visits.",
-      completed: false,
-    },
-    {
-      id: "4",
-      step: "Ongoing: Keep your grocery spending steady",
-      description: "You've maintained £420/month consistently for three months. That's excellent budgeting - don't change what's working.",
-      completed: false,
-    },
-  ]);
+interface ChatMessage {
+  id: string;
+  role: "coach" | "user";
+  message: string;
+  timestamp: Date;
+}
 
-  const [goals] = useState<Goal[]>([
+export default function Coaching() {
+  const [goals, setGoals] = useState<Goal[]>([
     {
-      id: "1",
+      id: "house-deposit",
       name: "House Deposit",
       targetAmount: 20000,
       currentAmount: 5500,
       targetDate: "Oct 2028",
+      insight: "You could reach this 11 months early by optimizing eating out spending",
+      pathwaySteps: [
+        {
+          id: "1",
+          step: "This week: Review your eating out spending",
+          description: "Look at your last few restaurant purchases. Which ones brought the most value?",
+          completed: false,
+        },
+        {
+          id: "2",
+          step: "Next payday: Move £68 to your deposit",
+          description: "This is the amount you spent above your usual eating out average.",
+          completed: false,
+        },
+        {
+          id: "3",
+          step: "By end of month: Plan one special meal at home",
+          description: "Many families find this creates better memories than restaurant visits.",
+          completed: false,
+        },
+        {
+          id: "4",
+          step: "Ongoing: Keep your grocery spending steady",
+          description: "You've maintained £420/month for three months - that's excellent.",
+          completed: false,
+        },
+      ],
+    },
+    {
+      id: "family-holiday",
+      name: "Family Holiday",
+      targetAmount: 5000,
+      currentAmount: 2800,
+      targetDate: "Jul 2026",
+      insight: "On track to reach this goal 3 months ahead of schedule with current savings",
+      pathwaySteps: [
+        {
+          id: "1",
+          step: "This month: Maintain £200/month contribution",
+          description: "Your current savings rate is working well for this timeline.",
+          completed: false,
+        },
+        {
+          id: "2",
+          step: "Consider: Early booking discounts",
+          description: "Booking 6 months ahead could save 15-20% on accommodation.",
+          completed: false,
+        },
+      ],
     },
   ]);
 
-  const primaryGoal = goals[0];
-
-  const toggleStep = (stepId: string) => {
-    setPathwaySteps(
-      pathwaySteps.map((step) =>
-        step.id === stepId ? { ...step, completed: !step.completed } : step
-      )
-    );
-  };
+  const [activeGoalId, setActiveGoalId] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: "1",
+      role: "coach",
+      message: "Hi Alex and Sam! I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.",
+      timestamp: new Date(),
+    },
+  ]);
+  const [userInput, setUserInput] = useState("");
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-GB", {
@@ -83,196 +122,320 @@ export default function Coaching() {
     }).format(amount);
   };
 
+  const toggleStep = (goalId: string, stepId: string) => {
+    setGoals(
+      goals.map((goal) =>
+        goal.id === goalId
+          ? {
+              ...goal,
+              pathwaySteps: goal.pathwaySteps.map((step) =>
+                step.id === stepId ? { ...step, completed: !step.completed } : step
+              ),
+            }
+          : goal
+      )
+    );
+  };
+
+  const handleSendMessage = (messageOverride?: string) => {
+    const messageToSend = messageOverride || userInput;
+    if (!messageToSend.trim()) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: "user",
+      message: messageToSend,
+      timestamp: new Date(),
+    };
+
+    setChatMessages([...chatMessages, userMessage]);
+    setUserInput("");
+
+    setTimeout(() => {
+      const coachResponse = getCoachResponse(messageToSend.toLowerCase(), activeGoalId);
+      const coachMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: "coach",
+        message: coachResponse,
+        timestamp: new Date(),
+      };
+      setChatMessages((prev) => [...prev, coachMessage]);
+    }, 500);
+  };
+
+  const getCoachResponse = (input: string, goalId: string | null): string => {
+    const houseDepositResponses: Record<string, string> = {
+      "eating out": "I noticed you spent £68 more than usual this month on eating out - bringing it to £280 instead of your typical £212. Your grocery spending has stayed rock-solid at £420 for three months, so that's the category with the most flexibility right now.",
+      "timeline": "At your current £500/month allocation, you'll reach your house deposit goal in October 2028. But if you redirected that £68 from eating out, you'd be allocating £568/month and could reach it by December 2027 - that's 11 months earlier!",
+      "why": "The eating out category stood out because it's the only one that varied this month. Your bills are fixed, groceries are consistent, and you're already doing great with those. This is just the easiest adjustment to make.",
+      "how": "Start small - maybe track your restaurant spending for a week to see which meals felt most valuable. Then decide if you want to cook more at home or just be more selective about where you eat out.",
+      "alternative": "Absolutely! You could also look at your £275 shopping category or find ways to increase your income. The eating out suggestion is just one option - whatever feels sustainable for your family is the right choice.",
+    };
+
+    const holidayResponses: Record<string, string> = {
+      "timeline": "You're doing brilliantly with this goal! At your current £200/month savings rate, you'll reach your £5,000 target 3 months early - that's ahead of your July 2026 target date. If you wanted to get there even faster, adding £50/month would get you there 5 months sooner.",
+      "booking": "Great question! Booking early can save you 15-20% on accommodation costs. If you know roughly when and where you want to go, I'd suggest starting to look about 6 months before your trip to get the best deals.",
+      "save": "Great question! Booking early can save you 15-20% on accommodation costs. If you know roughly when and where you want to go, I'd suggest starting to look about 6 months before your trip to get the best deals.",
+      "increase": "You're already on track to reach this £5,000 goal 3 months early! But if you wanted to accelerate even more, adding just £50/month to your current £200 would mean you could book 5 months sooner. That might give you better choices for accommodation and timing.",
+      "contributions": "You're already on track to reach this £5,000 goal 3 months early! But if you wanted to accelerate even more, adding just £50/month to your current £200 would mean you could book 5 months sooner. That might give you better choices for accommodation and timing.",
+    };
+
+    if (goalId === "house-deposit") {
+      for (const [keyword, response] of Object.entries(houseDepositResponses)) {
+        if (input.includes(keyword)) return response;
+      }
+    } else if (goalId === "family-holiday") {
+      for (const [keyword, response] of Object.entries(holidayResponses)) {
+        if (input.includes(keyword)) return response;
+      }
+    }
+
+    if (input.includes("help") || input.includes("?")) {
+      return "I'm here to help! Try asking about specific topics like 'Why eating out?' or 'What about the timeline?' You can also expand a goal card to see detailed recommendations.";
+    }
+
+    return "That's a great question! Could you tell me more about what you'd like to know? You can ask about spending patterns, timelines, or specific recommendations.";
+  };
+
+  const handleQuickReply = (message: string) => {
+    handleSendMessage(message);
+  };
+
+  const handleAccordionChange = (value: string) => {
+    setActiveGoalId(value || null);
+    
+    if (value) {
+      const goal = goals.find((g) => g.id === value);
+      if (goal) {
+        const contextMessage: ChatMessage = {
+          id: Date.now().toString(),
+          role: "coach",
+          message: `I see you're looking at your ${goal.name} goal. ${goal.insight}. Feel free to ask me anything about this!`,
+          timestamp: new Date(),
+        };
+        setChatMessages((prev) => [...prev, contextMessage]);
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen p-6 space-y-6 max-w-4xl">
-      <div>
+    <div className="min-h-screen p-6">
+      <div className="mb-6">
         <h1 className="text-3xl font-heading font-bold mb-2">Financial Coach</h1>
         <p className="text-muted-foreground">
           Your guide to achieving your family's financial goals
         </p>
       </div>
 
-      <Card className="bg-primary/5" data-testid="card-coach-greeting">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-primary/10">
-              <MessageCircle className="w-6 h-6 text-primary" />
-            </div>
-            <div className="flex-1 space-y-3">
-              <p className="text-base leading-relaxed">
-                Hi Alex and Sam, I've been looking at your finances over the past few months, and I wanted to share what I'm seeing.
-              </p>
-              <p className="text-base leading-relaxed">
-                Your income has been beautifully steady at <span className="font-semibold">£2,500 per month</span> for the last three months. That consistency is your foundation - it means we can make realistic plans together.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
+        <div className="space-y-4" data-testid="goal-cards-section">
+          <Accordion
+            type="single"
+            collapsible
+            value={activeGoalId || undefined}
+            onValueChange={handleAccordionChange}
+          >
+            {goals.map((goal) => {
+              const progressPercentage = (goal.currentAmount / goal.targetAmount) * 100;
+              
+              return (
+                <AccordionItem key={goal.id} value={goal.id} className="mb-4">
+                  <Card>
+                    <AccordionTrigger className="px-6 py-4 hover:no-underline" data-testid={`goal-card-${goal.id}`}>
+                      <div className="flex items-start gap-4 flex-1 text-left">
+                        <div className="p-3 rounded-lg bg-primary/10">
+                          <Target className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1 space-y-3">
+                          <div>
+                            <CardTitle className="text-lg mb-1">{goal.name}</CardTitle>
+                            <p className="text-sm text-muted-foreground">{goal.insight}</p>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">Progress</span>
+                              <span className="font-medium">
+                                {formatCurrency(goal.currentAmount)} of {formatCurrency(goal.targetAmount)}
+                              </span>
+                            </div>
+                            <Progress value={progressPercentage} className="h-2" />
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <CardContent className="pt-4">
+                        <div className="space-y-4">
+                          <div className="flex items-start gap-2 mb-4">
+                            <TrendingUp className="w-5 h-5 text-chart-3 mt-0.5" />
+                            <div>
+                              <p className="font-semibold text-chart-3 mb-1">Recommended Pathway</p>
+                              <p className="text-sm text-muted-foreground">
+                                Follow these steps to reach your goal faster. Check them off as you complete each one.
+                              </p>
+                            </div>
+                          </div>
 
-      <Card data-testid="card-coach-insight">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-chart-3/10">
-              <Lightbulb className="w-6 h-6 text-chart-3" />
-            </div>
-            <div className="flex-1 space-y-3">
-              <p className="text-base leading-relaxed">
-                This month, you've spent <span className="font-semibold">£1,818</span> compared to your usual <span className="font-semibold">£1,750</span>. The difference? An extra <span className="font-semibold">£68 on eating out</span> - bringing that category to £280 instead of your typical £212.
-              </p>
-              <p className="text-base leading-relaxed">
-                Here's what caught my attention: your grocery spending has stayed rock-solid at £420 for three straight months. You're great at maintaining that budget. The eating out variance tells me you might have had some celebrations or busy weeks - that's completely normal for families.
-              </p>
-              <p className="text-base leading-relaxed text-muted-foreground italic">
-                Before we talk about your House Deposit goal, I'm curious: how did those extra restaurant meals feel? Were they worth it for your family?
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                          {goal.pathwaySteps.map((step) => (
+                            <div
+                              key={step.id}
+                              className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover-elevate"
+                              data-testid={`pathway-step-${goal.id}-${step.id}`}
+                            >
+                              <Checkbox
+                                id={`${goal.id}-${step.id}`}
+                                checked={step.completed}
+                                onCheckedChange={() => toggleStep(goal.id, step.id)}
+                                className="mt-1"
+                                data-testid={`checkbox-${goal.id}-${step.id}`}
+                              />
+                              <div className="flex-1">
+                                <label
+                                  htmlFor={`${goal.id}-${step.id}`}
+                                  className={`font-medium cursor-pointer block mb-1 ${
+                                    step.completed ? "line-through text-muted-foreground" : ""
+                                  }`}
+                                >
+                                  {step.step}
+                                </label>
+                                <p className="text-sm text-muted-foreground">{step.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </AccordionContent>
+                  </Card>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </div>
 
-      <Card data-testid="card-goal-connection">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
-            Connecting This to Your {primaryGoal.name} Goal
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <p className="text-base leading-relaxed">
-              You're currently putting <span className="font-semibold">£500 per month</span> toward your house deposit. You've already saved <span className="font-semibold">{formatCurrency(primaryGoal.currentAmount)}</span> of your <span className="font-semibold">{formatCurrency(primaryGoal.targetAmount)}</span> target.
-            </p>
-            <p className="text-base leading-relaxed">
-              After your monthly bills and spending, you have about <span className="font-semibold">£682 available</span>. If you brought eating out back to your usual level, that £68 could go toward your deposit instead - making it <span className="font-semibold">£568 per month</span>.
-            </p>
-            
-            <div className="p-4 rounded-lg bg-chart-3/10 border border-chart-3/20">
-              <div className="flex items-start gap-3">
-                <TrendingUp className="w-5 h-5 text-chart-3 mt-0.5" />
-                <div className="space-y-2">
-                  <p className="font-semibold text-chart-3">What this could mean:</p>
-                  <p className="text-sm leading-relaxed">
-                    At £568/month, you'd reach your deposit goal by <span className="font-semibold">December 2027</span> instead of October 2028 - that's <span className="font-semibold">11 months earlier</span>. You'd be looking at houses nearly a year sooner.
-                  </p>
+        <div className="lg:sticky lg:top-6 lg:self-start" data-testid="chat-section">
+          <Card className="h-[600px] flex flex-col">
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <MessageCircle className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Chat with Your Coach</CardTitle>
+                  <p className="text-sm text-muted-foreground">Ask me anything about your goals</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardHeader>
 
-          <div className="pt-2 border-t">
-            <p className="text-sm text-muted-foreground italic">
-              Of course, this isn't about being perfect every month. Life happens. But what feels doable for you?
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-muted/50" data-testid="card-pathway">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle>A Pathway to Consider</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
-                Here's a step-by-step approach you could try. Mark each step as you complete it - this is just for your own tracking.
-              </p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {pathwaySteps.map((step) => (
-            <div
-              key={step.id}
-              className="flex items-start gap-3 p-4 rounded-lg bg-background border hover-elevate"
-              data-testid={`pathway-step-${step.id}`}
-            >
-              <Checkbox
-                id={step.id}
-                checked={step.completed}
-                onCheckedChange={() => toggleStep(step.id)}
-                className="mt-1"
-                data-testid={`checkbox-step-${step.id}`}
-              />
-              <div className="flex-1">
-                <label
-                  htmlFor={step.id}
-                  className={`font-medium cursor-pointer block mb-1 ${
-                    step.completed ? "line-through text-muted-foreground" : ""
-                  }`}
+            <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+              {chatMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  data-testid={`chat-message-${msg.role}`}
                 >
-                  {step.step}
-                </label>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
+                  <div
+                    className={`max-w-[85%] rounded-lg p-3 ${
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                  >
+                    <p className="text-sm leading-relaxed">{msg.message}</p>
+                  </div>
+                </div>
+              ))}
+
+              {activeGoalId && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {activeGoalId === "house-deposit" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Why eating out specifically?")}
+                        data-testid="quick-reply-eating-out"
+                      >
+                        Why eating out?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("What about the timeline?")}
+                        data-testid="quick-reply-timeline"
+                      >
+                        Timeline details?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Any alternatives?")}
+                        data-testid="quick-reply-alternatives"
+                      >
+                        Alternatives?
+                      </Button>
+                    </>
+                  )}
+                  {activeGoalId === "family-holiday" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Tell me about the timeline")}
+                        data-testid="quick-reply-holiday-timeline"
+                      >
+                        Timeline?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("How can I save on booking?")}
+                        data-testid="quick-reply-booking"
+                      >
+                        Booking tips?
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleQuickReply("Should I increase contributions?")}
+                        data-testid="quick-reply-contributions"
+                      >
+                        Increase savings?
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
+            </CardContent>
+
+            <div className="border-t p-4">
+              <div className="flex gap-2">
+                <Textarea
+                  placeholder="Ask me about your goals..."
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  className="resize-none min-h-[44px] max-h-[120px]"
+                  rows={1}
+                  data-testid="chat-input"
+                />
+                <Button
+                  onClick={() => handleSendMessage()}
+                  size="icon"
+                  data-testid="button-send-message"
+                  disabled={!userInput.trim()}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
               </div>
             </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      <Card data-testid="card-alternative-path">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-muted-foreground" />
-            Not Sure About This Path?
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-base leading-relaxed">
-            There are always other ways to approach your goals. Here are some alternatives worth considering:
-          </p>
-          <div className="space-y-2">
-            <div className="p-3 rounded-lg bg-muted">
-              <p className="font-medium mb-1">Keep eating out steady, optimize elsewhere</p>
-              <p className="text-sm text-muted-foreground">
-                If those meals are important family time, look at your £275 shopping category or £95 entertainment spending instead.
-              </p>
-            </div>
-            <div className="p-3 rounded-lg bg-muted">
-              <p className="font-medium mb-1">Smaller adjustment, longer timeline</p>
-              <p className="text-sm text-muted-foreground">
-                Even cutting eating out by £30 (not the full £68) would get you to your goal 5 months earlier - that's still meaningful progress.
-              </p>
-            </div>
-            <div className="p-3 rounded-lg bg-muted">
-              <p className="font-medium mb-1">Income opportunity focus</p>
-              <p className="text-sm text-muted-foreground">
-                Your steady income is great, but have you explored freelance work, salary negotiation, or side projects that could add even £100/month?
-              </p>
-            </div>
-          </div>
-          <div className="pt-3 border-t">
-            <p className="text-sm text-muted-foreground italic">
-              The best financial plan is one you'll actually stick to. What resonates most with how your family wants to live?
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-primary/5">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-primary/10">
-              <MessageCircle className="w-6 h-6 text-primary" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-base leading-relaxed">
-                Remember: this isn't about cutting back on joy. It's about making sure every pound you spend or save is moving you toward the life you want.
-              </p>
-              <p className="text-base leading-relaxed">
-                Your groceries show you can budget when it matters. Your steady income gives you options. You're in a strong position - we're just fine-tuning.
-              </p>
-              <Badge variant="secondary" className="mt-2">
-                Next review: When you get your October payday
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
