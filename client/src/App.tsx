@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
 import { LoadingTransition } from "@/components/LoadingTransition";
 import NotFound from "@/pages/not-found";
 import Welcome from "@/pages/Welcome";
@@ -55,7 +56,10 @@ function Navigation() {
               })}
             </div>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <NotificationBell />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </nav>
