@@ -4,15 +4,38 @@
 
 Envis is an intelligent financial coach for families, designed to coordinate financial goals, prevent stress, and build collective wealth. This interactive demo showcases core product features to stakeholders, utilizing a "Wizard of Oz" methodology where the front-end is fully functional and polished, backed by mock data and simulated responses.
 
-The demo covers six key experiences:
+The demo covers five key experiences:
 - Onboarding & Account Linking
 - Dashboard View with unified family finances
 - Financial Coach providing conversational, intelligent guidance
 - Goal Management for shared family goals
-- Smart Insights with proactive recommendations
 - Account Management for connected bank accounts
 
 ## Recent Changes (October 2025)
+
+### Notification System Replaces Insights Tab (October 5, 2025)
+Removed the standalone Insights tab and replaced it with a notification bell in the header:
+
+**Notification Bell Component**:
+- Bell icon in header with unread count badge
+- Dropdown popover showing recent alerts and updates
+- Four notification types with distinct icons and colors:
+  - **Goal updates**: Target icon (chart-3 color)
+  - **Dashboard insights**: Lightbulb icon (chart-1 color)
+  - **Account changes**: Building2 icon (chart-2 color)
+  - **Family updates**: Users icon (chart-4 color)
+
+**Notification Features**:
+- Click notification to mark as read (unread indicator dot)
+- "Mark all read" button for bulk actions
+- Remove individual notifications with X button (visible on hover)
+- Empty state display when no notifications exist
+- Smooth interactions using shadcn Popover primitives
+
+**Rationale**:
+- Insights are better served contextually within Dashboard's category breakdowns
+- Notification system provides a central hub for alerts across all features
+- Reduces navigation complexity while improving information density
 
 ### Financial Coach Redesign with Smart Insights Integration
 Redesigned the Financial Coach page to provide a more interactive, goal-focused coaching experience with intelligent connections to insights:
