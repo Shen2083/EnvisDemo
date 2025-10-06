@@ -1,4 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#2563eb"/>
-  <text x="16" y="23" font-family="Plus Jakarta Sans, Inter, sans-serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">E</text>
+<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stylized "E" that forms a protective shelter/house shape -->
+  <path
+    d="M6 30V6H30M6 18H26M6 30H26"
+    stroke="#0066cc"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  
+  <!-- AI intelligence indicator - subtle dot accent -->
+  <circle
+    cx="30"
+    cy="6"
+    r="2.5"
+    fill="#0066cc"
+    opacity="0.7"
+  />
 </svg>
