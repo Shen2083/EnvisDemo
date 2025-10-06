@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
+import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { LoadingTransition } from "@/components/LoadingTransition";
 import NotFound from "@/pages/not-found";
 import Welcome from "@/pages/Welcome";
@@ -33,7 +34,11 @@ function Navigation() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
-            <h1 className="text-xl font-heading font-bold">Envis</h1>
+            <Link href="/dashboard">
+              <a className="text-xl font-heading font-bold hover-elevate px-2 py-1 rounded-md cursor-pointer" data-testid="link-logo">
+                Envis
+              </a>
+            </Link>
             <div className="flex gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -59,6 +64,7 @@ function Navigation() {
           <div className="flex items-center gap-2">
             <NotificationBell />
             <ThemeToggle />
+            <UserProfileDropdown />
           </div>
         </div>
       </div>
