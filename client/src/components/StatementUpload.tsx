@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-interface UploadedAccount {
+export interface UploadedAccount {
   id: string;
   accountName: string;
   accountType: "investment" | "premium_bonds";

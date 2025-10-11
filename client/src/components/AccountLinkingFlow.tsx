@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Building2, CheckCircle2, Lock } from "lucide-react";
+import { Building2, CheckCircle2, Lock, TrendingUp, Landmark, X } from "lucide-react";
+import { StatementUpload, UploadedAccount } from "./StatementUpload";
 
 interface AccountLinkingFlowProps {
   onComplete: (accounts: string[]) => void;
@@ -25,11 +26,12 @@ const DEMO_ACCOUNTS = [
 ];
 
 export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
-  const [step, setStep] = useState<"intro" | "selectBank" | "selectAccounts" | "success">("intro");
+  const [step, setStep] = useState<"intro" | "selectBank" | "selectAccounts" | "success" | "uploadStatements">("intro");
   const [selectedBank, setSelectedBank] = useState<string | null>(null);
   const [currentBankAccounts, setCurrentBankAccounts] = useState<string[]>([]);
   const [allConnectedAccounts, setAllConnectedAccounts] = useState<string[]>([]);
   const [connectedBanks, setConnectedBanks] = useState<string[]>([]);
+  const [uploadedAccounts, setUploadedAccounts] = useState<UploadedAccount[]>([]);
 
   const handleBankSelect = (bankId: string) => {
     setSelectedBank(bankId);
@@ -180,53 +182,147 @@ export function AccountLinkingFlow({ onComplete }: AccountLinkingFlowProps) {
     );
   }
 
+  if (step === "success") {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <Card className="w-full max-w-2xl">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="h-16 w-16 rounded-full bg-chart-3/20 flex items-center justify-center">
+                <CheckCircle2 className="h-8 w-8 text-chart-3" />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-heading mb-2">
+              {connectedBanks.length === 1 ? "Great start!" : "You're all connected!"}
+            </CardTitle>
+            <CardDescription className="text-base">
+              Successfully connected {allConnectedAccounts.length} {allConnectedAccounts.length === 1 ? "account" : "accounts"} from {connectedBanks.length} {connectedBanks.length === 1 ? "bank" : "banks"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {DEMO_ACCOUNTS.filter((acc) => allConnectedAccounts.includes(acc.id)).map((account) => (
+              <div key={account.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                <div>
+                  <div className="font-medium">{account.name}</div>
+                  <div className="text-sm text-muted-foreground">{account.type}</div>
+                </div>
+                <div className="font-medium tabular-nums">
+                  £{Math.abs(account.balance).toLocaleString("en-GB", { minimumFractionDigits: 2 })}
+                </div>
+              </div>
+            ))}
+
+            <div className="flex flex-col gap-3 pt-4">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+                onClick={handleAddAnotherBank}
+                data-testid="button-add-another-bank"
+              >
+                <Building2 className="h-4 w-4 mr-2" />
+                Add Another Bank
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+                onClick={() => setStep("uploadStatements")}
+                data-testid="button-upload-investment-accounts"
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Add Investment Accounts
+              </Button>
+              <Button
+                size="lg"
+                className="w-full"
+                onClick={() => onComplete(allConnectedAccounts)}
+                data-testid="button-view-dashboard"
+              >
+                See My Family Dashboard
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Upload Statements step
+  const handleStatementAdded = (account: UploadedAccount) => {
+    setUploadedAccounts((prev) => [...prev, account]);
+  };
+
+  const handleRemoveUploadedAccount = (accountId: string) => {
+    setUploadedAccounts((prev) => prev.filter((acc) => acc.id !== accountId));
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="w-full max-w-2xl">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="h-16 w-16 rounded-full bg-chart-3/20 flex items-center justify-center">
-              <CheckCircle2 className="h-8 w-8 text-chart-3" />
-            </div>
-          </div>
-          <CardTitle className="text-3xl font-heading mb-2">
-            {connectedBanks.length === 1 ? "Great start!" : "You're all connected!"}
-          </CardTitle>
-          <CardDescription className="text-base">
-            Successfully connected {allConnectedAccounts.length} {allConnectedAccounts.length === 1 ? "account" : "accounts"} from {connectedBanks.length} {connectedBanks.length === 1 ? "bank" : "banks"}
+        <CardHeader>
+          <CardTitle className="text-2xl font-heading">Add Investment Accounts</CardTitle>
+          <CardDescription>
+            Upload statements for investment accounts and premium bonds not covered by Open Banking
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {DEMO_ACCOUNTS.filter((acc) => allConnectedAccounts.includes(acc.id)).map((account) => (
-            <div key={account.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-              <div>
-                <div className="font-medium">{account.name}</div>
-                <div className="text-sm text-muted-foreground">{account.type}</div>
-              </div>
-              <div className="font-medium tabular-nums">
-                £{Math.abs(account.balance).toLocaleString("en-GB", { minimumFractionDigits: 2 })}
-              </div>
+        <CardContent className="space-y-6">
+          <StatementUpload onAccountAdded={handleStatementAdded} />
+
+          {uploadedAccounts.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="font-semibold">Uploaded Accounts</h3>
+              {uploadedAccounts.map((account) => {
+                const Icon = account.accountType === "investment" ? TrendingUp : Landmark;
+                return (
+                  <div key={account.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-chart-1/20 flex items-center justify-center flex-shrink-0">
+                        <Icon className="h-5 w-5 text-chart-1" />
+                      </div>
+                      <div>
+                        <div className="font-medium">{account.accountName}</div>
+                        <div className="text-sm text-muted-foreground">{account.provider}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right tabular-nums">
+                        <div className="font-medium">
+                          £{account.balance.toLocaleString("en-GB", { minimumFractionDigits: 2 })}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveUploadedAccount(account.id)}
+                        data-testid={`button-remove-uploaded-${account.id}`}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          )}
 
           <div className="flex flex-col gap-3 pt-4">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={handleAddAnotherBank}
-              data-testid="button-add-another-bank"
-            >
-              <Building2 className="h-4 w-4 mr-2" />
-              Add Another Bank
-            </Button>
             <Button
               size="lg"
               className="w-full"
               onClick={() => onComplete(allConnectedAccounts)}
-              data-testid="button-view-dashboard"
+              data-testid="button-continue-to-dashboard"
             >
-              See My Family Dashboard
+              {uploadedAccounts.length > 0 ? "Continue to Dashboard" : "Skip for Now"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="w-full"
+              onClick={() => setStep("success")}
+              data-testid="button-back-to-summary"
+            >
+              Back to Summary
             </Button>
           </div>
         </CardContent>
