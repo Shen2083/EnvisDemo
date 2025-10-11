@@ -158,11 +158,10 @@ export function StatementUpload({ onAccountAdded }: StatementUploadProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6"
                 onClick={() => setSelectedFile(null)}
                 data-testid="button-remove-file"
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" />
               </Button>
             </div>
           )}
