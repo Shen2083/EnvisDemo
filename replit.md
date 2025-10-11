@@ -23,8 +23,15 @@ Added statement upload capability for account types not supported by Open Bankin
   - **Investment Accounts**: For stocks, shares, ISAs (TrendingUp icon)
   - **Premium Bonds**: For NS&I Premium Bonds (Landmark icon)
 
+**Onboarding Integration**:
+- Added "Add Investment Accounts" option to onboarding success screen
+- New upload statements step appears after bank account linking
+- Users can upload multiple statements or skip to dashboard
+- "Back to Summary" button allows navigation between screens without losing data
+- Button text changes from "Skip for Now" to "Continue to Dashboard" when accounts are uploaded
+
 **Account Display**:
-- Uploaded accounts shown separately from Open Banking connected accounts
+- Uploaded accounts shown separately from Open Banking connected accounts (both in onboarding and Accounts page)
 - Shows provider, account name, balance, upload date, and filename
 - "Statement Upload" badge to distinguish from automatically synced accounts
 - Remove functionality with confirmation dialog
@@ -32,6 +39,7 @@ Added statement upload capability for account types not supported by Open Bankin
 **Rationale**:
 - Open Banking infrastructure doesn't currently support investment accounts or premium bonds
 - Manual statement upload provides workaround until API support is available
+- Integration into onboarding ensures users can add all accounts at the start
 - Keeps all family finances visible in one unified dashboard
 
 ### Notification System Replaces Insights Tab (October 5, 2025)
