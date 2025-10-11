@@ -13,6 +13,27 @@ The demo covers five key experiences:
 
 ## Recent Changes (October 2025)
 
+### Statement Upload for Investment Accounts & Premium Bonds (October 11, 2025)
+Added statement upload capability for account types not supported by Open Banking:
+
+**Statement Upload Feature**:
+- Upload PDF or CSV statements for investment accounts and premium bonds
+- Form fields: Account type, provider/institution, account name, current balance, statement file
+- Two account types supported:
+  - **Investment Accounts**: For stocks, shares, ISAs (TrendingUp icon)
+  - **Premium Bonds**: For NS&I Premium Bonds (Landmark icon)
+
+**Account Display**:
+- Uploaded accounts shown separately from Open Banking connected accounts
+- Shows provider, account name, balance, upload date, and filename
+- "Statement Upload" badge to distinguish from automatically synced accounts
+- Remove functionality with confirmation dialog
+
+**Rationale**:
+- Open Banking infrastructure doesn't currently support investment accounts or premium bonds
+- Manual statement upload provides workaround until API support is available
+- Keeps all family finances visible in one unified dashboard
+
 ### Notification System Replaces Insights Tab (October 5, 2025)
 Removed the standalone Insights tab and replaced it with a notification bell in the header:
 
