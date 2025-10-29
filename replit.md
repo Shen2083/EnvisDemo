@@ -22,7 +22,7 @@ Extended the watermark pattern to appear throughout the entire application:
 - Watermark also appears on landing page via `WelcomeHero.tsx`
 
 **Visual Design**:
-- Text: "MVP prototype built by Shenbagaraja Vanamamalai"
+- Text: "Demo prototype built by Shenbagaraja Vanamamalai"
 - Diagonal strips rotated 45 degrees across the screen
 - 10% opacity for subtle, professional appearance
 - Repeating pattern (18 rows × 10 columns) covering full background

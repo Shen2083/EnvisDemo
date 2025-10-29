@@ -18,7 +18,7 @@ export function Watermark() {
           >
             {[...Array(10)].map((_, j) => (
               <span key={j} className="whitespace-nowrap">
-                MVP prototype built by Shenbagaraja Vanamamalai
+                Demo prototype built by Shenbagaraja Vanamamalai
               </span>
             ))}
           </div>
