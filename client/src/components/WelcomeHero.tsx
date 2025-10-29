@@ -15,6 +15,16 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90" />
       </div>
+
+      {/* Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div 
+          className="text-2xl md:text-3xl font-semibold whitespace-nowrap opacity-5"
+          style={{ transform: 'rotate(-45deg)' }}
+        >
+          MVP prototype built by Shenbagaraja Vanamamalai
+        </div>
+      </div>
       
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
         <h1 className="font-heading font-bold text-5xl md:text-6xl tracking-tight mb-6">
