@@ -18,18 +18,22 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
 
       {/* Watermark */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0" style={{ transform: 'rotate(-45deg)' }}>
-          {[...Array(8)].map((_, i) => (
+        <div className="absolute inset-0" style={{ transform: 'rotate(-45deg)', transformOrigin: 'center', opacity: 0.15 }} data-testid="watermark-container">
+          {[...Array(12)].map((_, i) => (
             <div
               key={i}
-              className="text-2xl md:text-3xl font-semibold whitespace-nowrap opacity-15 absolute"
+              className="text-xl md:text-2xl font-semibold absolute flex gap-16"
               style={{
-                top: `${i * 150 - 300}px`,
-                left: '-20%',
-                width: '140%',
+                top: `${i * 120 - 400}px`,
+                left: '-50%',
+                width: '200%',
               }}
             >
-              MVP prototype built by Shenbagaraja Vanamamalai
+              {[...Array(10)].map((_, j) => (
+                <span key={j} className="whitespace-nowrap">
+                  MVP prototype built by Shenbagaraja Vanamamalai
+                </span>
+              ))}
             </div>
           ))}
         </div>
