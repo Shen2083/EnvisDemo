@@ -13,6 +13,34 @@ The demo covers five key experiences:
 
 ## Recent Changes (October 2025)
 
+### Watermark Applied to All Application Screens (October 29, 2025)
+Extended the watermark pattern to appear throughout the entire application:
+
+**Implementation**:
+- Created reusable `Watermark` component in `client/src/components/Watermark.tsx`
+- Applied watermark to all main app screens via Router component in `client/src/App.tsx`
+- Watermark also appears on landing page via `WelcomeHero.tsx`
+
+**Visual Design**:
+- Text: "MVP prototype built by Shenbagaraja Vanamamalai"
+- Diagonal strips rotated 45 degrees across the screen
+- 15% opacity for subtle, professional appearance
+- Repeating pattern (12 rows × 10 columns) covering full background
+- Fixed positioning with `pointer-events-none` ensures no interference with interactions
+
+**Coverage**:
+- Landing page (welcome screen)
+- Dashboard
+- Financial Coach (Coaching page)
+- Goals
+- Accounts
+- Family Members
+
+**Rationale**:
+- Provides consistent professional watermarking across entire demo experience
+- Clearly identifies prototype status to stakeholders
+- Non-intrusive design maintains full readability and usability of all features
+
 ### Statement Upload for Investment Accounts & Premium Bonds (October 11, 2025)
 Added statement upload capability for account types not supported by Open Banking:
 
