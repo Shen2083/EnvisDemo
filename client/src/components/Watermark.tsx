@@ -6,12 +6,12 @@ export function Watermark() {
         style={{ transform: 'rotate(-45deg)', transformOrigin: 'center', opacity: 0.10 }} 
         data-testid="watermark-container"
       >
-        {[...Array(12)].map((_, i) => (
+        {[...Array(18)].map((_, i) => (
           <div
             key={i}
             className="text-xl md:text-2xl font-semibold absolute flex gap-16"
             style={{
-              top: `${i * 120 - 400}px`,
+              top: `${i * 120 - 600}px`,
               left: '-50%',
               width: '200%',
             }}

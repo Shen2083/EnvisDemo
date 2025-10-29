@@ -25,7 +25,7 @@ Extended the watermark pattern to appear throughout the entire application:
 - Text: "MVP prototype built by Shenbagaraja Vanamamalai"
 - Diagonal strips rotated 45 degrees across the screen
 - 10% opacity for subtle, professional appearance
-- Repeating pattern (12 rows × 10 columns) covering full background
+- Repeating pattern (18 rows × 10 columns) covering full background
 - Fixed positioning with `pointer-events-none` ensures no interference with interactions
 
 **Coverage**:
