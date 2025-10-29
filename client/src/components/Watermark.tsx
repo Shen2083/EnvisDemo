@@ -3,7 +3,7 @@ export function Watermark() {
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       <div 
         className="absolute inset-0" 
-        style={{ transform: 'rotate(-45deg)', transformOrigin: 'center', opacity: 0.15 }} 
+        style={{ transform: 'rotate(-45deg)', transformOrigin: 'center', opacity: 0.10 }} 
         data-testid="watermark-container"
       >
         {[...Array(12)].map((_, i) => (
