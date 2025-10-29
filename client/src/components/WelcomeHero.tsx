@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Watermark } from "@/components/Watermark";
 import heroImage from "@assets/stock_images/abstract_minimal_gra_4910bd69.jpg";
 
 interface WelcomeHeroProps {
@@ -16,28 +17,7 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90" />
       </div>
 
-      {/* Watermark */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0" style={{ transform: 'rotate(-45deg)', transformOrigin: 'center', opacity: 0.15 }} data-testid="watermark-container">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="text-xl md:text-2xl font-semibold absolute flex gap-16"
-              style={{
-                top: `${i * 120 - 400}px`,
-                left: '-50%',
-                width: '200%',
-              }}
-            >
-              {[...Array(10)].map((_, j) => (
-                <span key={j} className="whitespace-nowrap">
-                  MVP prototype built by Shenbagaraja Vanamamalai
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+      <Watermark />
       
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
         <h1 className="font-heading font-bold text-5xl md:text-6xl tracking-tight mb-6">

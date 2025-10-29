@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { LoadingTransition } from "@/components/LoadingTransition";
+import { Watermark } from "@/components/Watermark";
 import NotFound from "@/pages/not-found";
 import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
@@ -85,6 +86,7 @@ function Router() {
 
   return (
     <>
+      <Watermark />
       <Navigation />
       <Switch>
         <Route path="/" component={Dashboard} />
