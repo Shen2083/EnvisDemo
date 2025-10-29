@@ -17,12 +17,21 @@ export function WelcomeHero({ onSignUp, onLogin }: WelcomeHeroProps) {
       </div>
 
       {/* Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <div 
-          className="text-2xl md:text-3xl font-semibold whitespace-nowrap opacity-5"
-          style={{ transform: 'rotate(-45deg)' }}
-        >
-          MVP prototype built by Shenbagaraja Vanamamalai
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0" style={{ transform: 'rotate(-45deg)' }}>
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="text-2xl md:text-3xl font-semibold whitespace-nowrap opacity-15 absolute"
+              style={{
+                top: `${i * 150 - 300}px`,
+                left: '-20%',
+                width: '140%',
+              }}
+            >
+              MVP prototype built by Shenbagaraja Vanamamalai
+            </div>
+          ))}
         </div>
       </div>
       
