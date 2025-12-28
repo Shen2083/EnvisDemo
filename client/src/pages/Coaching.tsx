@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,6 +20,7 @@ import {
   AlertCircle,
   Lightbulb,
 } from "lucide-react";
+import { useFairness } from "@/context/FairnessContext";
 
 interface Goal {
   id: string;
@@ -171,14 +172,20 @@ export default function Coaching() {
   ]);
 
   const [activeGoalId, setActiveGoalId] = useState<string | null>(null);
+  const { fairnessData } = useFairness();
   
-  const fairnessRatio = { partner1: 48, partner2: 52 };
+  const initialCoachMessage = useMemo(() => {
+    if (fairnessData) {
+      return `Hi Alex and Sam! I'm tracking your goal progress based on your agreed ${fairnessData.afterRatio[0]}/${fairnessData.afterRatio[1]} fairness split. I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.`;
+    }
+    return "Hi Alex and Sam! I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.";
+  }, [fairnessData]);
   
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => [
     {
       id: "1",
       role: "coach",
-      message: `Hi Alex and Sam! I'm tracking your goal progress based on your agreed ${fairnessRatio.partner1}/${fairnessRatio.partner2} fairness split. I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.`,
+      message: initialCoachMessage,
       timestamp: new Date(),
     },
   ]);

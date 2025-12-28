@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { BalanceSummary } from "@/components/BalanceSummary";
 import { TransactionGroups } from "@/components/TransactionGroups";
+import { useFairness } from "@/context/FairnessContext";
 
 interface Transaction {
   id: string;
@@ -192,6 +193,7 @@ export default function Dashboard() {
   const [activeInsightCategoryId, setActiveInsightCategoryId] = useState<string | null>(null);
   const [timelineFilter, setTimelineFilter] = useState<TimelineFilter>("current-and-previous");
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>("all");
+  const { getFairnessStatus } = useFairness();
 
   const parseTransactionDate = (dateStr: string): Date => {
     const months: { [key: string]: number } = {
@@ -368,11 +370,7 @@ export default function Dashboard() {
         monthlyNetFlow={750.00}
         activeGoals={4}
         pendingAlerts={6}
-        fairnessStatus={{
-          agreedRatio: [48, 52],
-          actualRatio: [47, 53],
-          isOnTrack: true,
-        }}
+        fairnessStatus={getFairnessStatus()}
       />
 
       <TransactionGroups

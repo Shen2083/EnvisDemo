@@ -11,6 +11,48 @@ The demo covers five key experiences:
 - Goal Management for shared family goals
 - Account Management for connected bank accounts
 
+## Recent Changes (December 2025)
+
+### Fairness Engine Integration (December 28, 2025)
+Added the Fairness Engine feature to calculate fair financial contribution ratios by valuing unpaid labor alongside monetary income:
+
+**FairnessCalculatorModal Component** (`client/src/components/FairnessCalculatorModal.tsx`):
+- Partner data inputs: Name, Gross Annual Income, Unpaid Labour Hours/Week, Hourly Value
+- Calculation logic: Virtual Income = Unpaid Hours × Hourly Value × 52
+- Total Economic Contribution = Gross Income + Virtual Income
+- Fairness Ratio derived from percentage split of Total Economic Contribution
+- Before/After bar chart visualization showing income-only vs fairness split
+- Summary text explaining the ratio shift (e.g., "By recognizing Sam's 30 hours of unpaid labor, the fair contribution shifts by 8%")
+- Save Fairness Agreement button to persist settings
+
+**Shared State Management** (`client/src/context/FairnessContext.tsx`):
+- Global FairnessProvider context for cross-component state sharing
+- Default fairness data pre-configured (48/52 split recognizing unpaid labor)
+- getFairnessStatus() utility for Dashboard tracker integration
+
+**Family Members Page Update**:
+- New "Fairness & Contribution" card below Active Members list
+- Displays current agreed ratio (e.g., "48/52") with partner names color-coded
+- "Adjust Fairness Settings" button opens the calculator modal
+- Explanation text about the ratio shift from income-only calculations
+
+**Dashboard BalanceSummary Update**:
+- Added 5th "Fairness Tracker" mini-widget in the metrics row
+- Shows agreed ratio with "On Track" or "Review" status indicator
+- Links to Family page for adjustments
+- Scale icon with chart-5 color scheme
+
+**Coaching Page Update**:
+- Financial Coach opening message acknowledges the fairness ratio
+- Message: "I'm tracking your goal progress based on your agreed 48/52 fairness split"
+- Falls back to generic message if fairness not set
+
+**Technical Implementation**:
+- FairnessContext provides centralized state management
+- All components (Dashboard, Family, Coaching) read from shared context
+- Modal saves directly to context, propagating changes app-wide
+- Default values pre-populated for demo purposes
+
 ## Recent Changes (October 2025)
 
 ### Watermark Applied to All Application Screens (October 29, 2025)

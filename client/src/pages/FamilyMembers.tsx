@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Users, Plus, Mail, Trash2, CheckCircle, Clock, XCircle, Scale, Settings } from "lucide-react";
-import { FairnessCalculatorModal, type FairnessData } from "@/components/FairnessCalculatorModal";
+import { FairnessCalculatorModal } from "@/components/FairnessCalculatorModal";
+import { useFairness, type FairnessData } from "@/context/FairnessContext";
 import {
   Dialog,
   DialogContent,
@@ -53,7 +54,7 @@ export default function FamilyMembers() {
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
   const [cancelingInviteId, setCancelingInviteId] = useState<string | null>(null);
   const [showFairnessModal, setShowFairnessModal] = useState(false);
-  const [fairnessData, setFairnessData] = useState<FairnessData | null>(null);
+  const { fairnessData, setFairnessData } = useFairness();
   
   const [members, setMembers] = useState<FamilyMember[]>([
     {
@@ -443,5 +444,3 @@ export default function FamilyMembers() {
     </div>
   );
 }
-
-export { type FairnessData };

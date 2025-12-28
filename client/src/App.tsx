@@ -10,6 +10,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { LoadingTransition } from "@/components/LoadingTransition";
 import { Watermark } from "@/components/Watermark";
+import { FairnessProvider } from "@/context/FairnessContext";
 import NotFound from "@/pages/not-found";
 import Welcome from "@/pages/Welcome";
 import Dashboard from "@/pages/Dashboard";
@@ -105,10 +106,12 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <Router />
-          <Toaster />
-        </TooltipProvider>
+        <FairnessProvider>
+          <TooltipProvider>
+            <Router />
+            <Toaster />
+          </TooltipProvider>
+        </FairnessProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
