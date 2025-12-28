@@ -1,0 +1,68 @@
+Objective: I need to integrate the "Fairness Engine" feature. This algorithm calculates fair financial contribution ratios by valuing "invisible labor" (unpaid work like childcare) alongside monetary income.
+
+Please implement the following changes:
+
+1. New Component: FairnessCalculatorModal
+Create a modal or slide-over component triggered from the Family tab.
+
+Inputs: Create a form for each partner (Alex & Sam) with fields for:
+
+Gross Annual Income (e.g., £45,000).
+
+Unpaid Labour Hours/Week (e.g., 30 hours).
+
+Hourly Value (Default to £15.00).
+
+The Logic:
+
+Calculate "Virtual Income" = Unpaid Hours * Hourly Value * 52.
+
+Calculate "Total Economic Contribution" = Gross Income + Virtual Income.
+
+Derive the Fairness Ratio (percentage split of the Total Economic Contribution).
+
+Visualization:
+
+Display a "Before" bar chart (Income-only split, e.g., 42/58).
+
+Display an "After" bar chart (Fairness split, e.g., 48/52).
+
+Add a text summary: "By recognizing Alex's 30 hours of unpaid labor, the fair contribution shifts by 6%."
+
+Action: Add a "Save Fairness Agreement" button that updates the global app state.
+
+2. UI Integration (Update Existing Screens)
+A. Update "Family" Tab [Reference: Family Members Screen]:
+
+Below the "Active Members" list, add a new card titled "Fairness & Contribution".
+
+Display the current ratio (e.g., "Agreed Split: 50/50" or "48/52").
+
+Add a primary button: "Adjust Fairness Settings" (This opens the new Modal).
+
+B. Update "Dashboard" [Reference: Family Dashboard Screen]:
+
+In the top metrics row (next to "Monthly Net Flow" or "Active Goals"), add a new mini-widget: "Fairness Tracker".
+
+It should show if the couple's actual contributions this month match their "Fairness Ratio" (e.g., "On Track" or "Needs Adjustment").
+
+C. Update "Coaching" [Reference: Financial Coach Screen]:
+
+Inject the calculated "Fairness Ratio" into the AI context.
+
+If the ratio is set, the Coach's opening message should acknowledge it: "I'm tracking your goal progress based on your agreed 48/52 fairness split."
+
+3. Data Model Update
+Update the FamilyMember state object to include:
+
+income: number
+
+unpaidHours: number
+
+contributionRatio: number (The calculated result).
+
+Style Guide:
+
+Match the existing "Clean, modern, accessible" aesthetic seen in the screenshots.
+
+Use the existing color palette (Deep Blue #0A2540 for headers/buttons, White backgrounds, Light Gray cards).

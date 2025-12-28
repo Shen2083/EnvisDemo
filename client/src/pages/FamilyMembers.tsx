@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Plus, Mail, Trash2, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Users, Plus, Mail, Trash2, CheckCircle, Clock, XCircle, Scale, Settings } from "lucide-react";
+import { FairnessCalculatorModal, type FairnessData } from "@/components/FairnessCalculatorModal";
 import {
   Dialog,
   DialogContent,
@@ -51,6 +52,8 @@ export default function FamilyMembers() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [removingMemberId, setRemovingMemberId] = useState<string | null>(null);
   const [cancelingInviteId, setCancelingInviteId] = useState<string | null>(null);
+  const [showFairnessModal, setShowFairnessModal] = useState(false);
+  const [fairnessData, setFairnessData] = useState<FairnessData | null>(null);
   
   const [members, setMembers] = useState<FamilyMember[]>([
     {
@@ -242,6 +245,57 @@ export default function FamilyMembers() {
           </CardContent>
         </Card>
 
+        {/* Fairness & Contribution */}
+        <Card data-testid="card-fairness-contribution">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Scale className="h-5 w-5" />
+              Fairness & Contribution
+            </CardTitle>
+            <CardDescription>
+              Calculate fair financial contributions by recognizing unpaid labor alongside income
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between p-4 rounded-lg border">
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Agreed Split</p>
+                {fairnessData ? (
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl font-bold" data-testid="text-fairness-ratio">
+                      {fairnessData.afterRatio[0]}/{fairnessData.afterRatio[1]}
+                    </span>
+                    <div className="text-sm text-muted-foreground">
+                      <span className="text-chart-1">{fairnessData.partner1.name}</span>
+                      {" / "}
+                      <span className="text-chart-2">{fairnessData.partner2.name}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-2xl font-bold text-muted-foreground" data-testid="text-fairness-ratio">
+                    Not Set
+                  </span>
+                )}
+              </div>
+              <Button 
+                onClick={() => setShowFairnessModal(true)}
+                data-testid="button-adjust-fairness"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Adjust Fairness Settings
+              </Button>
+            </div>
+            {fairnessData && fairnessData.ratioShift > 0 && (
+              <p className="text-sm text-muted-foreground mt-3">
+                This split recognizes {fairnessData.partner1.unpaidHours >= fairnessData.partner2.unpaidHours 
+                  ? fairnessData.partner1.name 
+                  : fairnessData.partner2.name}'s unpaid labor contribution, 
+                shifting the ratio by {fairnessData.ratioShift}% from income-only calculations.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Pending Invitations */}
         {invites.length > 0 && (
           <Card>
@@ -377,7 +431,17 @@ export default function FamilyMembers() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Fairness Calculator Modal */}
+        <FairnessCalculatorModal
+          open={showFairnessModal}
+          onOpenChange={setShowFairnessModal}
+          onSave={setFairnessData}
+          initialData={fairnessData}
+        />
       </div>
     </div>
   );
 }
+
+export { type FairnessData };
