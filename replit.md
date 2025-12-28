@@ -13,6 +13,15 @@ The demo covers five key experiences:
 
 ## Recent Changes (December 2025)
 
+### Transaction Data Updated to December 2025/January 2026 (December 28, 2025)
+Updated all mock transaction data to reflect current dates:
+- Transactions now span December 2025 and January 2026
+- Added holiday-themed transactions (Christmas dinner, gift shopping)
+- Increased transaction count for more realistic demo data
+- Updated insights to reflect holiday spending patterns
+- Income now shows both Alex and Sam's salary deposits
+- Default timeline filter remains "current-and-previous" showing both months
+
 ### Fairness Engine Integration (December 28, 2025)
 Added the Fairness Engine feature to calculate fair financial contribution ratios by valuing unpaid labor alongside monetary income:
 
