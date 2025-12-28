@@ -368,6 +368,11 @@ export default function Dashboard() {
         monthlyNetFlow={750.00}
         activeGoals={4}
         pendingAlerts={6}
+        fairnessStatus={{
+          agreedRatio: [48, 52],
+          actualRatio: [47, 53],
+          isOnTrack: true,
+        }}
       />
 
       <TransactionGroups

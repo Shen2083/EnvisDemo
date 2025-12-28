@@ -171,11 +171,14 @@ export default function Coaching() {
   ]);
 
   const [activeGoalId, setActiveGoalId] = useState<string | null>(null);
+  
+  const fairnessRatio = { partner1: 48, partner2: 52 };
+  
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       id: "1",
       role: "coach",
-      message: "Hi Alex and Sam! I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.",
+      message: `Hi Alex and Sam! I'm tracking your goal progress based on your agreed ${fairnessRatio.partner1}/${fairnessRatio.partner2} fairness split. I've reviewed your finances and have some insights about your goals. Click on a goal to see specific recommendations, or ask me anything.`,
       timestamp: new Date(),
     },
   ]);
