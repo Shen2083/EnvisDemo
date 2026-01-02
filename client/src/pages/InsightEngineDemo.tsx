@@ -2,60 +2,55 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { 
   Brain, 
-  Zap, 
-  MessageSquareHeart, 
+  Wallet,
+  Heart,
   ShieldCheck,
   AlertTriangle,
   CheckCircle2,
-  ArrowRight,
+  ArrowDown,
   Sparkles,
-  Heart,
-  Target
+  TrendingDown
 } from "lucide-react";
 
-interface InsightState {
-  detectedEmotion: string;
-  shameRiskScore: number;
-  shameRiskLevel: "Low" | "Medium" | "High";
-  statedGoal: string;
+interface CoachState {
+  spendingStatus: string;
+  detectedMood: string;
+  stressLevel: "Low" | "Medium" | "High";
   overspendAmount: number;
   category: string;
 }
 
 export default function InsightEngineDemo() {
-  const [isLowDistress, setIsLowDistress] = useState(false);
+  const [isLowStress, setIsLowStress] = useState(false);
 
-  const highDistressState: InsightState = {
-    detectedEmotion: "Anxiety",
-    shameRiskScore: 0.82,
-    shameRiskLevel: "High",
-    statedGoal: "Save for Holiday",
+  const highStressState: CoachState = {
+    spendingStatus: "Over Budget",
+    detectedMood: "Anxious",
+    stressLevel: "High",
     overspendAmount: 45,
     category: "Dining Out",
   };
 
-  const lowDistressState: InsightState = {
-    detectedEmotion: "Neutral",
-    shameRiskScore: 0.12,
-    shameRiskLevel: "Low",
-    statedGoal: "Save for Holiday",
+  const lowStressState: CoachState = {
+    spendingStatus: "Over Budget",
+    detectedMood: "Neutral",
+    stressLevel: "Low",
     overspendAmount: 45,
     category: "Dining Out",
   };
 
-  const currentState = isLowDistress ? lowDistressState : highDistressState;
+  const currentState = isLowStress ? lowStressState : highStressState;
 
-  const supportiveMessage = "Managing family finances is hard, and you're doing better than you think. We noticed a jump in dining spend—shall we adjust the holiday goal slightly to keep you on track?";
+  const supportiveMessage = "We know managing family finances is tough. You've had a spike in dining costs—shall we adjust your holiday goal slightly to keep you on track?";
   
-  const directMessage = "Heads up: You've exceeded your dining budget by £45 this week. Check your transactions here.";
+  const directMessage = "Heads up: You've exceeded your dining budget by £45. Tap to view transactions.";
 
-  const getMessage = () => isLowDistress ? directMessage : supportiveMessage;
-  const getFraming = () => isLowDistress ? "Direct" : "Supportive";
+  const getMessage = () => isLowStress ? directMessage : supportiveMessage;
+  const getMessageMode = () => isLowStress ? "Direct" : "Supportive";
 
-  const getShameRiskColor = (level: string) => {
+  const getStressColor = (level: string) => {
     switch (level) {
       case "High": return "bg-amber-500 text-white";
       case "Medium": return "bg-yellow-400 text-yellow-900";
@@ -64,161 +59,166 @@ export default function InsightEngineDemo() {
     }
   };
 
-  const getShameRiskBgColor = (level: string) => {
+  const getStressBorderColor = (level: string) => {
     switch (level) {
-      case "High": return "bg-amber-50 border-amber-200";
-      case "Medium": return "bg-yellow-50 border-yellow-200";
-      case "Low": return "bg-emerald-50 border-emerald-200";
-      default: return "bg-gray-50";
+      case "High": return "border-amber-300 bg-amber-50/50 dark:bg-amber-950/20";
+      case "Medium": return "border-yellow-300 bg-yellow-50/50 dark:bg-yellow-950/20";
+      case "Low": return "border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20";
+      default: return "border-gray-300 bg-gray-50/50";
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-2">
             <Brain className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">Insight Engine Demo</h1>
+            <h1 className="text-3xl font-bold text-foreground">Smart Financial Coach</h1>
           </div>
           <p className="text-muted-foreground">
-            Demonstrating shame-aware AI notification framing
+            AI-powered coaching that adapts to your emotional state
           </p>
         </div>
 
-        <Card className="border-2 border-primary/20 shadow-lg" data-testid="card-insight-brain">
+        <Card className="border-2 border-primary/20 shadow-lg" data-testid="card-analysis-layer">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Sparkles className="w-5 h-5 text-primary" />
-              The Insight Engine - Processing
+              The Analysis Layer
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-4">
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-blue-50/80 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900">
-                <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900">
-                  <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">Transaction Encoder</span>
-                    <Badge variant="secondary" className="text-xs">Complete</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Spending Spike Detected: +£{currentState.overspendAmount} in {currentState.category}</p>
-                  <Progress value={100} className="h-1.5 mt-2" />
-                </div>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-card border">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-bold">
+                1
               </div>
-
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-purple-50/80 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900">
-                <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900">
-                  <MessageSquareHeart className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Wallet className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium">Financial Check</span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">Text Encoder</span>
-                    <Badge variant="secondary" className="text-xs">Complete</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    User expressed <span className="font-medium">{currentState.detectedEmotion}</span> in last journal entry
-                  </p>
-                  <Progress value={100} className="h-1.5 mt-2" />
-                </div>
+                <p className="text-sm text-muted-foreground">Analyzing spending patterns</p>
               </div>
+              <Badge className="bg-red-500 hover:bg-red-500 text-white">
+                <TrendingDown className="w-3 h-3 mr-1" />
+                Overspent by £{currentState.overspendAmount}
+              </Badge>
+            </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-lg bg-indigo-50/80 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900">
-                <div className="p-2 rounded-full bg-indigo-100 dark:bg-indigo-900">
-                  <Target className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-card border">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 font-bold">
+                2
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Heart className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium">Emotional Check</span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">Cross-Modal Fusion</span>
-                    <Badge variant="secondary" className="text-xs">Complete</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Discrepancy found: Goal ("{currentState.statedGoal}") vs. Action (overspend)
-                  </p>
-                  <Progress value={100} className="h-1.5 mt-2" />
+                <p className="text-sm text-muted-foreground">Reading emotional context</p>
+              </div>
+              <Badge className={isLowStress ? "bg-emerald-500 hover:bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-500 text-white"}>
+                {isLowStress ? (
+                  <>
+                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                    User seems calm
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    User seems anxious
+                  </>
+                )}
+              </Badge>
+            </div>
+
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-card border">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 font-bold">
+                3
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <ShieldCheck className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium">Risk Assessment</span>
                 </div>
+                <p className="text-sm text-muted-foreground">Calculating notification approach</p>
               </div>
             </div>
 
-            <div className={`p-5 rounded-xl border-2 ${getShameRiskBgColor(currentState.shameRiskLevel)} transition-all duration-500`}>
+            <div className={`p-6 rounded-xl border-2 transition-all duration-500 ${getStressBorderColor(currentState.stressLevel)}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {currentState.shameRiskLevel === "High" ? (
-                    <AlertTriangle className="w-6 h-6 text-amber-600" />
+                  {currentState.stressLevel === "High" ? (
+                    <AlertTriangle className="w-7 h-7 text-amber-600" />
                   ) : (
-                    <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                    <CheckCircle2 className="w-7 h-7 text-emerald-600" />
                   )}
                   <div>
-                    <p className="font-semibold text-foreground">Shame-Risk Prediction</p>
-                    <p className="text-sm text-muted-foreground">Emotional sensitivity analysis</p>
+                    <p className="font-semibold text-lg text-foreground">Financial Stress Risk</p>
+                    <p className="text-sm text-muted-foreground">Combined analysis result</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold tabular-nums">{currentState.shameRiskScore.toFixed(2)}</div>
-                  <Badge className={`${getShameRiskColor(currentState.shameRiskLevel)} mt-1`}>
-                    {currentState.shameRiskLevel}
-                  </Badge>
-                </div>
+                <Badge className={`text-lg px-4 py-2 ${getStressColor(currentState.stressLevel)}`}>
+                  {currentState.stressLevel}
+                </Badge>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <div className="flex justify-center">
-          <ArrowRight className="w-6 h-6 text-muted-foreground animate-pulse" />
+          <ArrowDown className="w-6 h-6 text-muted-foreground animate-bounce" />
         </div>
 
         <Card 
           className={`border-2 shadow-lg transition-all duration-500 ${
-            isLowDistress 
-              ? "bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800" 
-              : "bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800"
+            isLowStress 
+              ? "bg-[#E6F3FF]/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800" 
+              : "bg-[#FFD8B1]/30 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800"
           }`}
-          data-testid="card-notification-output"
+          data-testid="card-notification-result"
         >
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <ShieldCheck className="w-5 h-5 text-primary" />
-              Notification Output
+              The Result
               <Badge 
-                className={`ml-2 ${isLowDistress ? "bg-blue-500" : "bg-amber-500"} text-white`}
+                className={`ml-2 ${isLowStress ? "bg-blue-500 hover:bg-blue-500" : "bg-amber-500 hover:bg-amber-500"} text-white`}
               >
-                {getFraming()} Framing
+                {getMessageMode()} Mode
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div 
               className={`p-6 rounded-xl transition-all duration-500 ${
-                isLowDistress 
-                  ? "bg-[#E6F3FF] dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700" 
-                  : "bg-[#FFD8B1]/60 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700"
+                isLowStress 
+                  ? "bg-[#E6F3FF] dark:bg-blue-900/40 border border-blue-200 dark:border-blue-700" 
+                  : "bg-[#FFD8B1]/70 dark:bg-orange-900/40 border border-orange-200 dark:border-orange-700"
               }`}
             >
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-full ${isLowDistress ? "bg-blue-100 dark:bg-blue-800" : "bg-orange-100 dark:bg-orange-800"}`}>
-                  {isLowDistress ? (
-                    <Zap className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+                <div className={`p-3 rounded-full shrink-0 ${isLowStress ? "bg-blue-100 dark:bg-blue-800" : "bg-orange-100 dark:bg-orange-800"}`}>
+                  {isLowStress ? (
+                    <Wallet className="w-5 h-5 text-blue-600 dark:text-blue-300" />
                   ) : (
                     <Heart className="w-5 h-5 text-orange-600 dark:text-orange-300" />
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-foreground mb-1">
-                    {isLowDistress ? "Budget Update" : "A Gentle Note"}
+                  <p className="font-medium text-foreground mb-2">
+                    {isLowStress ? "Budget Alert" : "A Gentle Nudge"}
                   </p>
-                  <p className="text-foreground/80 leading-relaxed">
+                  <p className="text-foreground/90 leading-relaxed">
                     {getMessage()}
                   </p>
                   <Button 
                     variant="outline" 
                     size="sm" 
                     className="mt-4"
-                    data-testid="button-view-details"
+                    data-testid="button-view-transactions"
                   >
-                    View Details
+                    View Transactions
                   </Button>
                 </div>
               </div>
@@ -226,12 +226,12 @@ export default function InsightEngineDemo() {
 
             <div className="mt-6 p-4 rounded-lg bg-muted/50 border">
               <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">
-                AI Decision Rationale
+                Why This Tone?
               </p>
               <p className="text-sm text-muted-foreground">
-                {isLowDistress 
-                  ? "Low shame-risk detected. User is emotionally stable. Using direct, informative framing to deliver actionable insight efficiently."
-                  : "High shame-risk detected. User shows signs of anxiety. Using supportive, empathetic framing to prevent emotional distress while still encouraging positive action."
+                {isLowStress 
+                  ? "Low stress detected. The user is emotionally stable, so we can deliver a direct, actionable message without causing anxiety."
+                  : "High stress detected. The user may be worried about finances, so we use warm, supportive language to encourage action without adding pressure."
                 }
               </p>
             </div>
@@ -241,27 +241,27 @@ export default function InsightEngineDemo() {
         <div className="flex justify-center pt-4">
           <Button
             size="lg"
-            variant={isLowDistress ? "default" : "outline"}
-            onClick={() => setIsLowDistress(!isLowDistress)}
+            variant={isLowStress ? "default" : "outline"}
+            onClick={() => setIsLowStress(!isLowStress)}
             className="gap-2"
-            data-testid="button-toggle-distress"
+            data-testid="button-toggle-stress"
           >
-            {isLowDistress ? (
+            {isLowStress ? (
               <>
                 <AlertTriangle className="w-4 h-4" />
-                Simulate High Distress
+                Simulate High Stress
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4" />
-                Simulate Low Distress
+                Simulate Low Stress
               </>
             )}
           </Button>
         </div>
 
         <div className="text-center text-xs text-muted-foreground pt-4">
-          <p>Envis Insight Engine v1.0 - Shame-Aware Notification System</p>
+          <p>Envis Smart Coach v1.0 - Emotionally Aware Financial Guidance</p>
         </div>
       </div>
     </div>
