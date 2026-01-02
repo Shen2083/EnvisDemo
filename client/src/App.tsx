@@ -19,7 +19,7 @@ import Accounts from "@/pages/Accounts";
 import FamilyMembers from "@/pages/FamilyMembers";
 import Coaching from "@/pages/Coaching";
 import InsightEngineDemo from "@/pages/InsightEngineDemo";
-import { LayoutDashboard, Target, Building2, Users, Sparkles } from "lucide-react";
+import { LayoutDashboard, Target, Building2, Users, Sparkles, Brain } from "lucide-react";
 
 function Navigation() {
   const [location] = useLocation();
@@ -30,6 +30,7 @@ function Navigation() {
     { path: "/goals", label: "Goals", icon: Target },
     { path: "/accounts", label: "Accounts", icon: Building2 },
     { path: "/family", label: "Family", icon: Users },
+    { path: "/insight-engine", label: "AI Insights", icon: Brain },
   ];
 
   return (
