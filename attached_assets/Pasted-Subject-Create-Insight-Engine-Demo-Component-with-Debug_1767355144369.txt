@@ -1,0 +1,51 @@
+Subject: Create 'Insight Engine' Demo Component with Debug Overlay
+
+Context: I am building a React Native fintech app called "Envis" for families. I need to demonstrate our proprietary AI, the "Insight Engine," for a stakeholder presentation. This engine analyzes transaction data and emotional context to send "Shame-Risk" aware notifications.
+
+Task: Create a new React Native component called InsightEngineDemo.tsx. This screen should visually demonstrate the AI analyzing a financial scenario and choosing the correct "Framing" for a notification.
+
+Requirements:
+
+The Scenario (Mock Data):
+
+Create a mock state where a user has overspent on "Dining Out" by £45.
+
+Simulate an AI Input payload: { detected_emotion: "Anxiety", shame_risk_score: 0.82 (High), stated_goal: "Save for Holiday" }.
+
+UI Layout - Split View:
+
+Top Half (The "Brain"): A visual representation of the Insight Engine processing.
+
+Show a clean, tech-forward visualization (e.g., progress bars or badges) for:
+
+"Transaction Encoder: Spending Spike Detected"
+
+"Text Encoder: User expressed anxiety in last log"
+
+"Cross-Modal Fusion: Discrepancy found (Goal vs. Action)"
+
+CRITICAL: Show a metric called "Shame-Risk Prediction" with a value of 0.82 (High). Color code this (e.g., Amber/Orange).
+
+Bottom Half (The "Output"): The actual notification card presented to the user.
+
+Since Shame Risk is High, the AI must select the "Supportive" framing (not "Direct" or "Urgent").
+
+Render the Message: "Managing family finance is hard, and you're doing better than you think. We noticed a jump in dining spend—shall we adjust the holiday goal slightly to keep you on track?"
+
+Style: Use warm, inclusive colors (Pastel Orange #FFD8B1, Soft Blue #E6F3FF) as per our brand guidelines. Do not use aggressive reds.
+
+Interactive Elements:
+
+Add a simple toggle or button labelled "Simulate Low Distress".
+
+When clicked, update the state to shame_risk_score: 0.12 (Low).
+
+Change the Output Message to "Direct" framing: "Heads up: You've exceeded your dining budget by £45 this week. Check your transactions here."
+
+Technical Constraints:
+
+Use StyleSheet for styling.
+
+Use standard React Native View, Text, TouchableOpacity.
+
+Make it look modern and "Bank-Grade" secure but friendly.

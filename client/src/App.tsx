@@ -18,6 +18,7 @@ import Goals from "@/pages/Goals";
 import Accounts from "@/pages/Accounts";
 import FamilyMembers from "@/pages/FamilyMembers";
 import Coaching from "@/pages/Coaching";
+import InsightEngineDemo from "@/pages/InsightEngineDemo";
 import { LayoutDashboard, Target, Building2, Users, Sparkles } from "lucide-react";
 
 function Navigation() {
@@ -96,6 +97,7 @@ function Router() {
         <Route path="/goals" component={Goals} />
         <Route path="/accounts" component={Accounts} />
         <Route path="/family" component={FamilyMembers} />
+        <Route path="/insight-engine" component={InsightEngineDemo} />
         <Route component={NotFound} />
       </Switch>
     </>
